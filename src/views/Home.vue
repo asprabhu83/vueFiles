@@ -16,7 +16,7 @@
 </label>
  </div>
  </form>
-    <div class="flex flex-wrap -mx-4 -mb-8">
+    <div class="flex flex-wrap -mx-4 -mb-8" v-if="galleries">
       <div class="md:w-1/4 px-4 mb-8" v-for="(image, key) in galleries" v-bind:key="key"><img class="rounded shadow-md" :src="image" alt=""></div>
     </div>
   </section>
@@ -29,8 +29,7 @@ export default {
       formData: {
         title: '',
         files: Object
-      },
-      galleries: ['https://source.unsplash.com/random/1280x720', 'https://source.unsplash.com/random/1280x720', 'https://source.unsplash.com/random/1280x720', 'https://source.unsplash.com/random/1280x720']
+      }
     }
   },
   methods: {
@@ -45,21 +44,26 @@ export default {
         className: ''
       })
     },
-    onFileUpload (ev) {
+    async onFileUpload (ev) {
       var videoForm = this.$refs.videoForm
       var formData = new FormData(videoForm)
-      this.axios.post('/api/upload', formData)
+      var galArray = []
+      await this.axios.post('/api/upload', formData)
         // get data
         .then(x => {
           x.data.files.forEach(gallery => {
-            this.galleries.push('../storage/app/public' + gallery)
+            galArray.push('../storage/app/public/' + gallery)
           })
         })
+      this.$store.commit('GET_GALLERIES', { galArray: galArray })
     }
   },
   computed: {
     Layers () {
       return this.$store.state.Layers
+    },
+    galleries () {
+      return this.$store.state.galleries
     }
   }
 }
