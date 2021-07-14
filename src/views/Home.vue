@@ -1,10 +1,11 @@
 <template>
- <form method="post" action="api/upload" enctype="multipart/form-data" ref="videoForm" class="w-full max-w-lg">
+  <section class="py-8 px-4">
+ <form method="post" action="" enctype="multipart/form-data" ref="videoForm" class="w-full max-w-lg">
  <div class="flex flex-wrap -mx-3 mb-6">
     <div class="w-full  px-3 mb-6 md:mb-0">
    <input type="text"
                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                       name="title"
+                       name="title" v-model="formData.title"
                        placeholder="Enter video title">
                        </div>
     <label
@@ -15,13 +16,21 @@
 </label>
  </div>
  </form>
+    <div class="flex flex-wrap -mx-4 -mb-8">
+      <div class="md:w-1/4 px-4 mb-8" v-for="(image, key) in galleries" v-bind:key="key"><img class="rounded shadow-md" :src="image" alt=""></div>
+    </div>
+  </section>
 </template>
 <script>
 export default {
   name: 'App',
   data () {
     return {
-      fileData: []
+      formData: {
+        title: '',
+        files: Object
+      },
+      galleries: ['https://source.unsplash.com/random/1280x720', 'https://source.unsplash.com/random/1280x720', 'https://source.unsplash.com/random/1280x720', 'https://source.unsplash.com/random/1280x720']
     }
   },
   methods: {
@@ -37,7 +46,15 @@ export default {
       })
     },
     onFileUpload (ev) {
-      this.$refs.videoForm.submit()
+      var videoForm = this.$refs.videoForm
+      var formData = new FormData(videoForm)
+      this.axios.post('/api/upload', formData)
+        // get data
+        .then(x => {
+          x.data.files.forEach(gallery => {
+            this.galleries.push('../storage/app/public' + gallery)
+          })
+        })
     }
   },
   computed: {
