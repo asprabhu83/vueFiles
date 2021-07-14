@@ -8,7 +8,7 @@
         href="/"
         class="p-3 h-full flex items-center group border-r border-gray-600"
       >
-        <icon name="ycode-stroke" color="PureWhite" />
+        K
       </a>
     </div>
   </nav>
