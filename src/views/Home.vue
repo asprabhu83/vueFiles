@@ -8,14 +8,17 @@
                        name="title" v-model="formData.title"
                        placeholder="Enter video title">
                        </div>
+                       <div class="w-full  px-3 mb-6 md:mb-0">
     <label
   class="w-64 flex flex-col items-center px-4 py-6 bg-white rounded-md shadow-md tracking-wide uppercase border border-blue cursor-pointer hover:bg-gray-600 hover:text-white text-purple-600 ease-linear transition-all duration-150">
   <font-awesome-icon icon="cloud-upload-alt"  size="3x" />
   <span class="mt-2 text-base leading-normal">Select a file</span>
   <input type='file' class="hidden" name="video" @change="onFileUpload"/>
 </label>
+</div>
  </div>
  </form>
+ 
     <div class="flex flex-wrap -mx-4 -mb-8" v-if="galleries">
       <div class="md:w-1/4 px-4 mb-8" v-for="(image, key) in galleries" v-bind:key="key"><img class="rounded shadow-md" :src="image" alt=""></div>
     </div>
@@ -29,8 +32,15 @@ export default {
       formData: {
         title: '',
         files: Object
-      }
+      },
+      projects:[]
     }
+  },
+  created() {
+    this.axios.get('/api/getProjects')
+      .then(x => {
+        this.projects = x.data
+      })
   },
   methods: {
     createLayer () {
