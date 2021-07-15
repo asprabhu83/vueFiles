@@ -8,7 +8,6 @@
         class="w-full h-full relative z-10 scrollbar text-center text-none overflow-auto">
         <router-view/>
         </section>
-
       <Design />
     </section>
   </main>
