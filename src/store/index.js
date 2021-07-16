@@ -3,12 +3,14 @@ import { createStore } from 'vuex'
 export default createStore({
   state: {
     galleries: [],
-    laoding: false
+    loading: false,
+    projects: [],
+    selectedProject: {}
   },
   mutations: {
     GET_GALLERIES (state, payload) {
       state.galleries = payload.galArray
-      this.$store.state.loading = false
+      state.loading = false
     }
   },
   actions: {

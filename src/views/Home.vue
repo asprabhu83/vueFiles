@@ -1,16 +1,14 @@
 <template>
   <section class="py-8 px-4">
+  <h2 class="text-lg font-medium text-gray-900 truncate pb-8 px-1">Create Project</h2>
  <form method="post" action="" enctype="multipart/form-data" ref="videoForm" class="w-full max-w-lg">
- <div class="w-full flex flex-wrap -mx-3 mb-6">
+  <div class="w-full flex flex-wrap -mx-3 mb-6">
     <div class="w-1/2  px-3 mb-6 ">
-   <input type="text"
-                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                       name="title" v-model="formData.title"
-                       placeholder="Enter Project Name">
-                       </div>
-                       <div class="w-1/3  px-3 mb-6 md:mb-0">
+      <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="title" v-model="formData.title" placeholder="Enter Project Name">
+    </div>
+  <div class="w-1/3  px-3 mb-6 md:mb-0">
     <label
-  class="w-60 flex inline-flex items-center items-center px-4 py-1.5 bg-white rounded-md shadow-md tracking-wide uppercase border border-blue cursor-pointer hover:bg-gray-600 hover:text-white text-purple-600 ease-linear transition-all duration-150">
+  class="w-60 flex inline-flex items-center items-center px-4 py-1.5 bg-white hover:bg-gray-600 rounded-md shadow-md tracking-wide font-medium uppercase border border-blue cursor-pointer hover:bg-white-600 hover:text-white text-gray-600 ease-linear transition-all duration-150">
   <font-awesome-icon icon="cloud-upload-alt"  size="1x" />
   <span class="text-base leading-normal px-2">Choose Video</span>
   <input type='file' class="hidden" name="video" @change="onFileUpload"/>

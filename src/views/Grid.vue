@@ -1,24 +1,19 @@
 <template>
-<div class="bg-gray-100 w-1/4 rounded px-6" v-if="projects && projects.length > 0">
-    <div class="sticky top-0 z-50 bg-gray-100 border-l-4 border-red-400 -ml-6 pl-6 flex items-center justify-between py-4">
-        <div class="font-semibold text-gray-800">Projects</div>
-    </div>
-    <hr class="-mx-6"/>
-    <template  v-for="(project, index) in projects" v-bind:key="index">
-    <div class="flex items-center justify-between my-4" @click='getAllFrames(project)'>
-        <div class="w-16">
-        <img class="w-12 h-12 rounded-full" :src="'https://videoprocess.kavisoftek.in/uploads/'+project.original_name+'/thumb_0.jpg'">
-        </div>
-        <div class="flex-1 pl-2">
-            <div class="text-gray-700 font-semibold">
-            {{project.title}}
-            </div>
-            <div class="text-gray-600 font-thin">
-            </div>
-        </div>
-    </div>
-    <hr class="boder-b-0 my-4"/>
+<div class="bg-gray-100 w-full rounded py-8 px-4"  v-if="project">
+  <ul class="flex justify-left items-center my-4">
+    <template v-for="(tab, index) in tabs" v-bind:key="index">
+      <li class="cursor-pointer py-2 px-4 text-gray-500 border-b-8" :class="activeTab===index ? 'text-gray-700 border-gray-700' : ''" @click="activeTab = index" v-text="tab"></li>
     </template>
+  </ul>
+  <div class="bg-white p-16 text-left mx-auto border">
+    <div v-show="activeTab===0"><h2 class="text-lg font-medium text-gray-900 truncate pb-8 px-1">{{project.project_name}}</h2>
+   <div class="flex flex-wrap -mx-4 -mb-8">
+      <div class="md:w-1/4 px-4 mb-8" v-for="(number, key) in project.video_duration" v-bind:key="key">
+        <img class="rounded shadow-md" :src="'./uploads/'+project.image_Location+'/thumb_'+number+'.jpg'" alt="" @click="editImage(number, project)">
+      </div>
+    </div></div>
+    <div v-show="activeTab===1">Content 2</div>
+    </div>
 </div>
 </template>
 <script>
@@ -26,8 +21,23 @@ export default {
   name: 'Grid',
   data () {
     return {
-      projects: [],
+      activeTab: 0,
+      tabs: [
+        'Video Frames',
+        'Attributes'
+      ],
       tableHeader: []
+    }
+  },
+  computed: {
+    project () {
+      return this.$store.state.selectedProject
+    }
+  },
+  methods: {
+    editImage (number, project) {
+      console.log(number, project)
+      this.$router.push('/editor')
     }
   }
 }
