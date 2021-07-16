@@ -9,12 +9,12 @@
                        placeholder="Enter Project Name">
                        </div>
                        <div class="w-1/3  px-3 mb-6 md:mb-0">
-    <button
-  class="w-60 flex inline-flex items-center items-center px-4 py-1 bg-white rounded-md shadow-md tracking-wide uppercase border border-blue cursor-pointer hover:bg-gray-600 hover:text-white text-purple-600 ease-linear transition-all duration-150">
-  <font-awesome-icon icon="cloud-upload-alt"  size="2x" />
+    <label
+  class="w-60 flex inline-flex items-center items-center px-4 py-1.5 bg-white rounded-md shadow-md tracking-wide uppercase border border-blue cursor-pointer hover:bg-gray-600 hover:text-white text-purple-600 ease-linear transition-all duration-150">
+  <font-awesome-icon icon="cloud-upload-alt"  size="1x" />
   <span class="text-base leading-normal px-2">Choose Video</span>
   <input type='file' class="hidden" name="video" @change="onFileUpload"/>
-</button>
+</label>
 </div>
  </div>
  </form>
@@ -51,6 +51,7 @@ export default {
       var videoForm = this.$refs.videoForm
       var formData = new FormData(videoForm)
       var galArray = []
+      this.$store.state.loading = true
       await this.axios.post('/api/upload', formData)
         // get data
         .then(x => {

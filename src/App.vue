@@ -10,6 +10,7 @@
         </section>
       <Design />
     </section>
+    <Loading v-if="loading"/>
   </main>
 </template>
 
@@ -17,16 +18,21 @@
 import Design from './components/Design.vue'
 import Layers from './components/Layers.vue'
 import NavBar from './components/NavBar.vue'
+import Loading from './components/Loading.vue'
 export default {
   name: 'App',
   components: {
     Design,
     NavBar,
-    Layers
+    Layers,
+    Loading
   },
   computed: {
     Layers () {
       return this.$store.state.Layers
+    },
+    loading () {
+      return this.$store.state.loading
     }
   }
 }
