@@ -5,7 +5,7 @@
     <section class="relative flex flex-1 flex-row overflow-hidden">
     <Layers />
       <section
-        class="w-full h-full relative z-10 scrollbar text-center text-none overflow-auto">
+        class="w-full h-full relative z-10 scrollbar text-left text-none overflow-auto">
         <router-view/>
         </section>
       <Design />

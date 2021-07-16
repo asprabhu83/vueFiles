@@ -1,32 +1,25 @@
 <template>
-<section class="py-8 px-4">
-  <div class="flex flex-col text-left">
-  <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-    <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-      <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" v-for="(header, hkey) in tableHeader" v-bind:key="hkey">
-                {{header}}
-              </th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <tr  v-for="(project, index) in projects" v-bind:key="index">
-              <td class="px-6 py-4 whitespace-nowrap"  v-for="(header, hkey) in tableHeader" v-bind:key="hkey">
-                <div class="flex items-center">
-                  {{project[header]}}
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+<div class="bg-gray-100 w-1/4 rounded px-6" v-if="projects && projects.length > 0">
+    <div class="sticky top-0 z-50 bg-gray-100 border-l-4 border-red-400 -ml-6 pl-6 flex items-center justify-between py-4">
+        <div class="font-semibold text-gray-800">Projects</div>
     </div>
-  </div>
+    <hr class="-mx-6"/>
+    <template  v-for="(project, index) in projects" v-bind:key="index">
+    <div class="flex items-center justify-between my-4" @click='getAllFrames(project)'>
+        <div class="w-16">
+        <img class="w-12 h-12 rounded-full" :src="'https://videoprocess.kavisoftek.in/uploads/'+project.original_name+'/thumb_0.jpg'">
+        </div>
+        <div class="flex-1 pl-2">
+            <div class="text-gray-700 font-semibold">
+            {{project.title}}
+            </div>
+            <div class="text-gray-600 font-thin">
+            </div>
+        </div>
+    </div>
+    <hr class="boder-b-0 my-4"/>
+    </template>
 </div>
-</section>
 </template>
 <script>
 export default {
@@ -36,14 +29,6 @@ export default {
       projects: [],
       tableHeader: []
     }
-  },
-  created () {
-    this.axios.get('https://videoprocess.kavisoftek.in/api/getProjects')
-      .then(x => {
-        this.projects = x.data
-        console.log(this.projects[0])
-        this.tableHeader = Object.keys(this.projects[0])
-      })
   }
 }
 </script>

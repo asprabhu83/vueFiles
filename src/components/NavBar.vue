@@ -4,12 +4,12 @@
     id="nav-bar"
   >
     <div class="flex-1 flex items-center">
-      <!-- <a
+      <a
         href="/"
         class="p-3 h-full flex items-center group border-r border-gray-600"
       >
-        K
-      </a> -->
+        Image
+      </a>
     </div>
   </nav>
 </template>
