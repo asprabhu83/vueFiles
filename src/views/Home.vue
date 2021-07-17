@@ -54,7 +54,7 @@ export default {
         // get data
         .then(x => {
           x.data.files.forEach(gallery => {
-            galArray.push('./uploads/' + gallery)
+            galArray.push('http://drill.siteguru.co.il/uploads/' + gallery)
           })
         })
       this.$store.commit('GET_GALLERIES', { galArray: galArray })
