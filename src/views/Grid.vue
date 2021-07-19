@@ -9,7 +9,7 @@
     <div v-show="activeTab===0"><h2 class="text-lg font-medium text-gray-900 truncate pb-8 px-1">{{project.project_name}}</h2>
    <div class="flex flex-wrap -mx-4 -mb-8">
       <div class="md:w-1/4 px-4 mb-8" v-for="(number, key) in project.video_duration" v-bind:key="key">
-        <img class="rounded shadow-md" :src="'./uploads/'+project.image_Location+'/thumb_'+number+'.jpg'" alt="" @click="editImage(number, project)">
+        <img class="rounded shadow-md" :src="'https://drill.siteguru.co.il//uploads/'+project.image_Location+'/thumb_'+number+'.jpg'" alt="" @click="editImage(number, project)">
       </div>
     </div></div>
     <div v-show="activeTab===1">Content 2</div>
@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     editImage (number, project) {
-      console.log(number, project)
+      this.$store.state.selectedImage = number
       this.$router.push('/editor')
     }
   }

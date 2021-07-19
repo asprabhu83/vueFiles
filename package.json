@@ -15,10 +15,13 @@
     "@tailwindcss/postcss7-compat": "^2.2.4",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "d3": "^7.0.0",
     "register-service-worker": "^1.7.1",
+    "vite": "^2.4.2",
     "vue": "^3.0.0",
     "vue-axios": "^3.2.4",
     "vue-router": "^4.0.0-0",
+    "vue3-carousel": "^0.1.23",
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {

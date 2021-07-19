@@ -5,7 +5,8 @@ export default createStore({
     galleries: [],
     loading: false,
     projects: [],
-    selectedProject: {}
+    selectedProject: {},
+    selectedImage: 0
   },
   mutations: {
     GET_GALLERIES (state, payload) {
