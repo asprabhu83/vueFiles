@@ -34,7 +34,7 @@ export default {
     }
   },
   mounted () {
-    this.loadImage('https://drill.siteguru.co.il/uploads/' + this.project.image_Location + '/thumb_' + this.number + '.jpg')
+    this.loadImage('uploads/' + this.project.image_Location + '/thumb_' + this.number + '.jpg')
   },
   methods: {
     async loadImage (imgSrc) {

@@ -18,7 +18,7 @@
     <template  v-for="(project, index) in projects" v-bind:key="index">
     <div class="flex items-center justify-between my-4" @click='getAllFrames(project)'>
         <div class="w-16">
-        <img class="w-12 h-12 rounded-full" :src="'https://drill.siteguru.co.il/uploads/'+project.image_Location+'/thumb_0.jpg'">
+        <img class="w-12 h-12 rounded-full" :src="'uploads/'+project.image_Location+'/thumb_0.jpg'">
         </div>
         <div class="flex-1 pl-2">
             <div class="text-white font-semibold">
@@ -43,7 +43,7 @@ export default {
     }
   },
   created () {
-    this.axios.get('https://videoprocess.kavisoftek.in/api/getProjects')
+    this.axios.get('api/getProjects')
       .then(x => {
         this.projects = x.data
       })
