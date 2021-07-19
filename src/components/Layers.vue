@@ -15,7 +15,7 @@
         <div class="font-semibold text-white">Projects</div>
     </div>
     <hr class="-mx-6"/>
-    <template  v-for="(project, index) in projects" v-bind:key="index">
+    <template  v-for="(project, projectIndex) in projects" v-bind:key="projectIndex">
     <div class="flex items-center justify-between my-4" @click='getAllFrames(project)'>
         <div class="w-16">
         <img class="w-12 h-12 rounded-full" :src="appURI + 'uploads/'+project.image_Location+'/thumb_0.jpg'">
@@ -43,7 +43,7 @@ export default {
     }
   },
   created () {
-    this.axios.get(this.apiURI + 'api/getProjects')
+    this.axios.get(this.appURI + 'api/getProjects')
       .then(x => {
         this.projects = x.data
       })

@@ -13,3 +13,4 @@ const Vue = createApp(App)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.config.productionTip = false
 Vue.use(store).use(router).use(VueAxios, axios).mount('#app')
+console.log(process.env)
