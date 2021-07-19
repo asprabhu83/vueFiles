@@ -34,7 +34,7 @@ export default {
     }
   },
   mounted () {
-    this.loadImage('uploads/' + this.project.image_Location + '/thumb_' + this.number + '.jpg')
+    this.loadImage(this.appURI + 'uploads/' + this.project.image_Location + '/thumb_' + this.number + '.jpg')
   },
   methods: {
     async loadImage (imgSrc) {
@@ -120,6 +120,9 @@ export default {
     },
     number () {
       return this.$store.state.selectedImage
+    },
+    appURI () {
+      return this.$store.state.appURI
     }
   }
 }

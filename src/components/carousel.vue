@@ -1,7 +1,7 @@
 <template>
   <carousel :items-to-show="5" v-if="project" class="my-2">
     <slide v-for="slide in project.video_duration" :key="slide" >
-      <img :src="'https://drill.siteguru.co.il/uploads/' + this.project.image_Location + '/thumb_' + slide + '.jpg'" class="pr-1 h-28">
+      <img :src="appURI+'/uploads/' + this.project.image_Location + '/thumb_' + slide + '.jpg'" class="pr-1 h-28">
     </slide>
     <template #addons>
       <navigation />
@@ -26,6 +26,9 @@ export default {
     },
     number () {
       return this.$store.state.selectedImage
+    },
+    appURI () {
+      return this.$store.state.appURI
     }
   }
 }

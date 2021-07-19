@@ -50,11 +50,11 @@ export default {
       var formData = new FormData(videoForm)
       var galArray = []
       this.$store.state.loading = true
-      await this.axios.post('/api/upload', formData)
+      await this.axios.post(this.appURI + '/api/upload', formData)
         // get data
         .then(x => {
           x.data.files.forEach(gallery => {
-            galArray.push('uploads/' + gallery)
+            galArray.push(this.appURI + 'uploads/' + gallery)
           })
         })
       this.$store.commit('GET_GALLERIES', { galArray: galArray })
@@ -66,6 +66,9 @@ export default {
     },
     galleries () {
       return this.$store.state.galleries
+    },
+    appURI () {
+      return this.$store.state.appURI
     }
   }
 }
