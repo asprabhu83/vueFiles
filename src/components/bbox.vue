@@ -1,5 +1,5 @@
 <template>
-   <svg v-if="imgsize" :viewBox="'0 0 ' + imgsize.width + ' ' + imgsize.height" id="viewport">
+   <svg v-if="imgsize" :viewBox="'0 0 ' + imgsize.width + ' ' + imgsize.height" id="viewport" onload="makeDraggable">
       <image :xlink:href="src" width="100%" height="100%"/>
       <rect
         v-for="(bb, i) in bbs" :key="'bb' + i"
@@ -25,6 +25,9 @@ export default {
       start: {},
       isDrawing: false,
       baseImage: Object,
+      selectedElement: false,
+      offset: null,
+      transform: null,
       annotation: {
         x: 0,
         y: 0,
@@ -46,69 +49,88 @@ export default {
   },
   methods: {
     handleMouseDown (event) {
-      const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
-      const start = this.svgPoint(this.svgElement, event.clientX, event.clientY)
-      const drawRect = (e) => {
-        const p = this.svgPoint(this.svgElement, e.clientX, e.clientY)
-        const w = Math.abs(p.x - start.x)
-        const h = Math.abs(p.y - start.y)
-        if (p.x > start.x) {
-          p.x = start.x
+      if (event.target.classList.contains('draggable')) {
+        this.selectedElement = event.target
+        this.offset = this.getMousePosition(event)
+        var transforms = this.selectedElement.transform.baseVal
+        if (transforms.length === 0 ||
+          transforms.getItem(0).type !== SVGTransform.SVG_TRANSFORM_TRANSLATE) {
+          var translate = this.svgElement.createSVGTransform()
+          translate.setTranslate(0, 0)
+          this.selectedElement.transform.baseVal.insertItemBefore(translate, 0)
         }
-        if (p.y > start.y) {
-          p.y = start.y
+        this.transform = transforms.getItem(0)
+        this.offset.x -= this.transform.matrix.e
+        this.offset.y -= this.transform.matrix.f
+        const drag = (evt) => {
+          if (this.selectedElement) {
+            evt.preventDefault()
+            var coord = this.getMousePosition(evt)
+            this.transform.setTranslate(coord.x - this.offset.x, coord.y - this.offset.y)
+          }
         }
-        rect.setAttributeNS(null, 'x', p.x)
-        rect.setAttributeNS(null, 'y', p.y)
-        rect.setAttributeNS(null, 'width', w)
-        rect.setAttributeNS(null, 'height', h)
-        rect.setAttributeNS(null, 'stroke', '#EF5350')
-        rect.setAttributeNS(null, 'fill', 'none')
-        rect.setAttributeNS(null, 'stroke-width', '2')
-        rect.setAttributeNS(null, 'vector-effect', 'non-scaling-stroke')
-        rect.setAttributeNS(null, 'shape-rendering', 'crispEdges')
-        const selectRect = (e) => {
+        const endDrag = (evt) => {
+          this.selectedElement = null
+        }
+        this.svgElement.addEventListener('mousemove', drag)
+        this.svgElement.addEventListener('mouseup', endDrag)
+        this.svgElement.addEventListener('mouseleave', endDrag)
+      } else {
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
+        const start = this.svgPoint(this.svgElement, event.clientX, event.clientY)
+        const drawRect = (e) => {
+          const p = this.svgPoint(this.svgElement, e.clientX, e.clientY)
+          const w = Math.abs(p.x - start.x)
+          const h = Math.abs(p.y - start.y)
+          if (p.x > start.x) {
+            p.x = start.x
+          }
+          if (p.y > start.y) {
+            p.y = start.y
+          }
+          rect.setAttributeNS(null, 'x', p.x)
+          rect.setAttributeNS(null, 'y', p.y)
+          rect.setAttributeNS(null, 'width', w)
+          rect.setAttributeNS(null, 'height', h)
+          rect.setAttributeNS(null, 'stroke', '#EF5350')
+          rect.setAttributeNS(null, 'fill', '#EF5350')
+          rect.setAttributeNS(null, 'fill-opacity', '0.4')
+          rect.setAttributeNS(null, 'stroke-width', '2')
+          rect.setAttributeNS(null, 'vector-effect', 'non-scaling-stroke')
+          rect.setAttributeNS(null, 'shape-rendering', 'crispEdges')
+          rect.setAttributeNS(null, 'class', 'draggable')
+          this.svgElement.appendChild(rect)
+          start.x = p.x
+          start.y = p.y
+        }
+        const endDraw = (e) => {
+          const p = this.svgPoint(this.svgElement, e.clientX, e.clientY)
+          const w = Math.abs(p.x - start.x)
+          const h = Math.abs(p.y - start.y)
+          const box = Object.create(this.annotation)
+          box.x = start.x
+          box.y = start.y
+          box.w = w
+          box.h = h
+          this.boundingBoxes.push(box)
+          console.log(this.boundingBoxes)
+          box.printCoordinates()
           this.svgElement.removeEventListener('mousemove', drawRect)
           this.svgElement.removeEventListener('mouseup', endDraw)
-          const endLeave = (e) => {
-            rect.removeEventListener('mousedown', selectRect)
-            rect.removeEventListener('mouseup', endLeave)
-          }
-          rect.addEventListener('mouseup', endLeave)
-          const moveRect = (e) => {
-            const p = this.svgPoint(this.svgElement, e.clientX, e.clientY)
-            rect.setAttributeNS(null, 'x', p.x)
-            rect.setAttributeNS(null, 'y', p.y)
-            this.svgElement.appendChild(rect)
-          }
-          rect.addEventListener('mousemove', moveRect)
         }
-        rect.addEventListener('mousedown', selectRect)
-        this.svgElement.appendChild(rect)
-        start.x = p.x
-        start.y = p.y
+        this.svgElement.addEventListener('mousemove', drawRect)
+        this.svgElement.addEventListener('mouseup', endDraw)
       }
-      const endDraw = (e) => {
-        const p = this.svgPoint(this.svgElement, e.clientX, e.clientY)
-        const w = Math.abs(p.x - start.x)
-        const h = Math.abs(p.y - start.y)
-        const box = Object.create(this.annotation)
-        box.x = start.x
-        box.y = start.y
-        box.w = w
-        box.h = h
-        this.boundingBoxes.push(box)
-        console.log(this.boundingBoxes)
-        box.printCoordinates()
-        this.svgElement.removeEventListener('mousemove', drawRect)
-        this.svgElement.removeEventListener('mouseup', endDraw)
+    },
+    getMousePosition (evt) {
+      var CTM = this.svgElement.getScreenCTM()
+      return {
+        x: (evt.clientX - CTM.e) / CTM.a,
+        y: (evt.clientY - CTM.f) / CTM.d
       }
-      this.svgElement.addEventListener('mousemove', drawRect)
-      this.svgElement.addEventListener('mouseup', endDraw)
     },
     createPoints () {
       this.svgElement = document.querySelector('#viewport')
-      console.log(this.svgElement)
       this.svgPoint = (elem, x, y) => {
         const p = this.svgElement.createSVGPoint()
         p.x = x
