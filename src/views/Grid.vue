@@ -12,13 +12,17 @@
         <img class="rounded shadow-md" :src="appURI + 'uploads/'+project.image_Location+'/thumb_'+number+'.jpg'" alt="" @click="editImage(number, project)">
       </div>
     </div></div>
-    <div v-show="activeTab===1">Content 2</div>
+    <div v-show="activeTab===1"><classComponent/></div>
     </div>
 </div>
 </template>
 <script>
+import classComponent from '@/components/ClassComponent'
 export default {
   name: 'Grid',
+  components: {
+    classComponent
+  },
   data () {
     return {
       activeTab: 0,
