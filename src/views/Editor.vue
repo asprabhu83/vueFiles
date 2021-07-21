@@ -1,5 +1,5 @@
 <template>
-<div class="w-full">
+<div class="w-full overflow-hidden">
   <bb-component :src="imgSrc"></bb-component>
   <carousal />
 </div>

@@ -1,11 +1,11 @@
 <template>
-  <main class="h-screen w-screen overflow-hidden bg-white flex flex-col">
+  <main class="h-screen w-screen bg-white flex flex-col">
     <NavBar />
 
-    <section class="relative flex flex-1 flex-row overflow-hidden">
+    <section class="relative flex flex-1 flex-row">
     <Layers />
       <section
-        class="w-full h-full relative z-10 scrollbar text-left text-none overflow-hidden">
+        class="w-full h-full relative z-10 scrollbar text-left text-none">
         <router-view/>
         </section>
       <Design />
