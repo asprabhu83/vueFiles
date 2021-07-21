@@ -1,7 +1,6 @@
 <template>
   <main class="h-screen w-screen bg-white flex flex-col">
     <NavBar />
-
     <section class="relative flex flex-1 flex-row">
     <Layers />
       <section
