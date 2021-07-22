@@ -18,20 +18,20 @@
                           <font-awesome-icon icon="plus"  size="1x"/>
                             <span class="px-2">Add Attributes</span>
                           </a>
-                           <div class="w-full mx-auto bg-white" v-if="classR.attributes && classR.attributes.length > 0">
-                           <div class="flex flex-row py-10 px-8" v-for="(attribute, attributeKey) in classR.attributes" v-bind:key="attributeKey + classKey">
-                            <div class="mb-4 w-1/4 ">
-
-                              <input class=" border rounded  py-2 px-3 text-grey-darker border-0 h-10 px-3 relative self-center font-roboto text-xl outline-none" :type="attribute.nametype"  :name="attribute.idName" :id="attribute.idName" v-model="attribute.attributeName" :placeholder="attribute.placeHolder">
+                           <template  v-if="classR.attributes && classR.attributes.length > 0">
+                           <div class="w-full mx-auto bg-white mb-4 mt-4" v-for="(attribute, attributeKey) in classR.attributes" v-bind:key="attributeKey + classKey">
+                           <div class="flex flex-row py-2 px-8" >
+                            <div class="w-1/4 ">
+                             <input class=" border rounded  py-2 px-3 text-grey-darker border-0 relative self-center outline-none" :type="attribute.nametype"  :name="attribute.idName" :id="attribute.idName" v-model="attribute.attributeName" :placeholder="attribute.placeHolder">
                             </div>
-                            <div class="mb-4 w-1/4">
-                              <select v-model="attribute.attributeType" class="border rounded w-3/4 py-2 px-3 text-grey-darker border-0 h-10 px-3 relative self-center font-roboto text-xl outline-none">
+                            <div class="w-1/4">
+                              <select v-model="attribute.attributeType" class="border rounded w-3/4 py-2 px-3 text-grey-darker border-0 relative self-center outline-none">
                                 <option v-for="(type, typeKey) in attribute.typeValues" v-bind:key="typeKey">{{type}}</option>
                               </select>
                             </div>
-                            <div class="mb-4 w-1/4" v-if="attribute.attributeType === 'select'">
-                            <div class="border flex flex-wrap items-stretch w-full relative h-15 bg-white items-center rounded mb-4">
-          <input class="flex-shrink flex-grow flex-auto leading-normal w-px flex-1 border-0 h-10 px-3 relative self-center font-roboto text-xl outline-none" type="text"  name="selectValue" id="selectValue" v-model="attribute.selectValue" placeholder="Enter Select Value">
+                            <div class="w-1/4" v-if="attribute.attributeType === 'select'">
+                            <div class="border flex flex-wrap items-stretch w-full relative py-2 px-3  bg-white items-center rounded">
+          <input class="flex-shrink flex-grow flex-auto leading-normal w-px flex-1 border-0 relative self-center outline-none" type="text"  name="selectValue" id="selectValue" v-model="attribute.selectValue" placeholder="Enter Select Value">
             <div class="flex -mr-px">
               <span
                 class="flex items-center leading-normal bg-white rounded rounded-l-none border-0 px-3 whitespace-no-wrap text-gray-600"
@@ -41,16 +41,20 @@
             </div>
           </div>
                             </div>
-                             <div class="mb-4 w-1/4" v-if="attribute.attributeType === 'select'">
-                            <template v-if="attribute && attribute.attributeValues.length >0">
-                              <div class="w-1/4 flex justify-center items-center m-1 px-5 py-1 rounded-full bg-green-700 text-base text-white font-medium" v-for="(attributeValue, valueKey) in attribute.attributeValues" v-bind:key="valueKey">
-                                <div class="text-xs font-normal px-2">{{attributeValue}}</div>
-                                <font-awesome-icon icon="plus"  size="0.5x" @click="addAttributesValues(attribute)"/>
+                             <div class="w-1/4 px-3">
+                             <div class="align-middle py-3 " >
+                          <font-awesome-icon icon="trash"  size="1x" @click="deleteAttributesValues(attribute)"/>
                              </div>
-                            </template>
                            </div>
                           </div>
+                           <div class="flex flex-row py-2 px-8" v-if="attribute.attributeType === 'select' && attribute.attributeValues.length >0">
+                              <div class="flex w-auto  justify-center items-center m-1 px-5 py-1 rounded-full bg-green-700 text-base text-white font-medium" v-for="(attributeValue, valueKey) in attribute.attributeValues" v-bind:key="valueKey">
+                                <div class="text-xs font-normal py-2 px-2">{{attributeValue}}</div>
+                                <font-awesome-icon icon="times"  size="1x" @click="addAttributesValues(attribute)"/>
+                             </div>
+                           </div>
                     </div>
+                    </template>
                     </div>
                 </form>
             </div>
@@ -75,7 +79,7 @@ export default {
         idName: '',
         placeHolder: 'Enter Your Attribute Name',
         attributeType: '',
-        typeValues: ['text', 'select', 'radiobutton', 'multiselect'],
+        typeValues: ['text', 'select', 'YesNo'],
         selectValue: '',
         attributeValues: []
       },
@@ -94,7 +98,9 @@ export default {
       item.attributes.push(box)
     },
     addAttributesValues (item) {
-      item.attributeValues.push(item.selectValue)
+      if (item.selectValue !== '') {
+        item.attributeValues.push(item.selectValue)
+      }
       item.selectValue = ''
     }
   }
