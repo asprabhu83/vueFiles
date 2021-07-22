@@ -13,7 +13,9 @@
                         <div class="mb-4">
                             <input class="w-3/4 border rounded py-2 px-3 text-grey-darker" :type="classR.type"
                                 :name="classR.idName" :id="classR.idName" v-model="classR.className" :placeholder="classR.placeHolder">
-                                <font-awesome-icon icon="save"  size="1x" @click="saveClass(classR)" class="mx-3"/>
+                                <button @click.prevent="saveClass(classR)" >
+                                <font-awesome-icon icon="save"  size="1x" class="mx-3"/>
+                                </button>
                         </div>
                          <a class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center" @click="addAttributes(classR)">
                           <font-awesome-icon icon="plus"  size="1x"/>
@@ -42,9 +44,16 @@
             </div>
           </div>
                             </div>
-                             <div class="w-1/4 px-3">
+                             <div class="flex w-1/4 px-3 items-center">
                              <div class="align-middle py-3 " >
-                          <font-awesome-icon icon="trash"  size="1x" @click="deleteAttributesValues(attribute)"/>
+                             <button @click="saveAttributes(classR, attribute)" >
+                             <font-awesome-icon icon="save"  size="1x"/>
+                             </button>
+                             </div>
+                             <div class="align-middle py-3 " >
+                             <button  @click="deleteAttributesValues(attribute)" >
+                          <font-awesome-icon icon="trash"  size="1x"/>
+                          </button>
                              </div>
                            </div>
                           </div>
@@ -85,7 +94,8 @@ export default {
         selectValue: '',
         attributeValues: []
       },
-      classes: []
+      classes: [],
+      last_ID: ''
     }
   },
   methods: {
@@ -95,18 +105,32 @@ export default {
       this.classes.push(box)
     },
     async saveClass (classR) {
-      await this.axios.post(this.appURI + '/api/createClass', {
+      await this.axios.post(this.appURI + 'api/createClass', {
         projectid: this.$store.state.selectedProject.id,
         className: classR.className
       })
         .then(x => {
-          console.log(x)
+          console.log(x.data)
+          classR.classId = x.data.last_insert_id
+          this.last_ID = x.data.last_insert_id
         })
     },
     addAttributes (item) {
       const box = Object.create(this.attribute)
       item.attributes.length > 0 ? box.idName = 'attributeName' + item.attributes.length : box.idName = 'attributeName'
       item.attributes.push(box)
+    },
+    async saveAttributes (classR, attribute) {
+      console.log(classR, attribute)
+      await this.axios.post(this.appURI + 'api/createAttribute', {
+        class_id: classR.classId.toString(),
+        attribute_name: attribute.attributeName,
+        attribute_type: attribute.attributeType,
+        attribute_Values: attribute.attributeValues
+      })
+        .then(x => {
+          attribute.attributeId = x.last_insert_id
+        })
     },
     addAttributesValues (item) {
       if (item.selectValue !== '') {
