@@ -38,14 +38,13 @@
 export default {
   data () {
     return {
-      projects: [],
       tableHeader: []
     }
   },
   created () {
     this.axios.get(this.appURI + 'api/getProjects')
       .then(x => {
-        this.projects = x.data
+        this.$store.state.projects = x.data
       })
   },
   methods: {
@@ -55,6 +54,9 @@ export default {
     }
   },
   computed: {
+    projects () {
+      return this.$store.state.projects
+    },
     appURI () {
       return this.$store.state.appURI
     }

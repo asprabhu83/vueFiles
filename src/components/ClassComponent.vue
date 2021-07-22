@@ -11,8 +11,9 @@
                 <form name="class_creation" id="class_creation">
                     <div class="py-10 px-8">
                         <div class="mb-4">
-                            <input class=" border rounded w-full py-2 px-3 text-grey-darker" :type="classR.type"
+                            <input class="w-3/4 border rounded py-2 px-3 text-grey-darker" :type="classR.type"
                                 :name="classR.idName" :id="classR.idName" v-model="classR.className" :placeholder="classR.placeHolder">
+                                <font-awesome-icon icon="save"  size="1x" @click="saveClass(classR)" class="mx-3"/>
                         </div>
                          <a class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center" @click="addAttributes(classR)">
                           <font-awesome-icon icon="plus"  size="1x"/>
@@ -67,6 +68,7 @@ export default {
   data () {
     return {
       class: {
+        classId: '',
         className: '',
         idName: '',
         placeHolder: 'Enter Your Class Name',
@@ -87,10 +89,19 @@ export default {
     }
   },
   methods: {
-    addClass () {
+    async addClass () {
       const box = Object.create(this.class)
       this.classes.length > 0 ? box.idName = 'className' + this.classes.length : box.idName = 'className'
       this.classes.push(box)
+    },
+    async saveClass (classR) {
+      await this.axios.post(this.appURI + '/api/createClass', {
+        projectid: this.$store.state.selectedProject.id,
+        className: classR.className
+      })
+        .then(x => {
+          console.log(x)
+        })
     },
     addAttributes (item) {
       const box = Object.create(this.attribute)
@@ -102,6 +113,11 @@ export default {
         item.attributeValues.push(item.selectValue)
       }
       item.selectValue = ''
+    }
+  },
+  computed: {
+    appURI () {
+      return this.$store.state.appURI
     }
   }
 }

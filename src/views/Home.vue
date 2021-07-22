@@ -58,6 +58,10 @@ export default {
           })
         })
       this.$store.commit('GET_GALLERIES', { galArray: galArray })
+      await this.axios.get(this.appURI + 'api/getProjects')
+        .then(x => {
+          this.$store.state.projects = x.data
+        })
     }
   },
   computed: {
