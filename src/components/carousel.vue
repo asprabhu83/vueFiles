@@ -1,7 +1,7 @@
 <template>
   <carousel items-to-show="7" v-if="project" class="my-2 m-auto w-11/12">
-    <slide v-for="slide in project.video_duration" :key="slide">
-      <img :src="appURI+'/uploads/' + this.project.image_Location + '/thumb_' + slide + '.jpg'" class="w-40">
+    <slide v-for="slide in project.Details" :key="slide">
+      <img :src="appURI+'/uploads/' + slide.image_Location" class="w-40">
     </slide>
     <template #addons>
       <navigation />

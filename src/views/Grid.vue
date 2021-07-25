@@ -8,8 +8,8 @@
   <div class="bg-white p-16 text-left mx-auto border">
     <div v-show="activeTab===0"><h2 class="text-lg font-medium text-gray-900 truncate pb-8 px-1">{{project.project_name}}</h2>
    <div class="flex flex-wrap -mx-4 -mb-8">
-      <div class="md:w-1/4 px-4 mb-8" v-for="(number, key) in project.video_duration" v-bind:key="key">
-        <img class="rounded shadow-md" :src="appURI + 'uploads/'+project.image_Location+'/thumb_'+number+'.jpg'" alt="" @click="editImage(number, project)">
+      <div class="md:w-1/4 px-4 mb-8" v-for="(detail, key) in project.Details" v-bind:key="key">
+        <img class="rounded shadow-md" :src="appURI + 'uploads/'+detail.image_Location" alt="" @click="editImage(detail.image_Location, project)">
       </div>
     </div></div>
     <div v-show="activeTab===1"><classComponent/></div>

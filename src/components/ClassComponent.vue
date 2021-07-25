@@ -46,9 +46,9 @@
                             </div>
                              <div class="flex w-1/4 px-3 items-center">
                              <div class="align-middle py-3 " >
-                             <button @click="saveAttributes(classR, attribute)" >
+                             <a class="cursor-pointer" @click.prevent="saveAttributes(classR, attribute)" >
                              <font-awesome-icon icon="save"  size="1x"/>
-                             </button>
+                             </a>
                              </div>
                              <div class="align-middle py-3 " >
                              <button  @click="deleteAttributesValues(attribute)" >
@@ -110,7 +110,6 @@ export default {
         className: classR.className
       })
         .then(x => {
-          console.log(x.data)
           classR.classId = x.data.last_insert_id
           this.last_ID = x.data.last_insert_id
         })
@@ -121,7 +120,6 @@ export default {
       item.attributes.push(box)
     },
     async saveAttributes (classR, attribute) {
-      console.log(classR, attribute)
       await this.axios.post(this.appURI + 'api/createAttribute', {
         class_id: classR.classId.toString(),
         attribute_name: attribute.attributeName,
