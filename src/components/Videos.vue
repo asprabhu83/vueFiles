@@ -12,10 +12,7 @@
         </div> -->
         <div class="rounded px-6" v-if="projects && projects.length > 0">
     <div class="sticky top-0 z-50 border-l-4 border-red-400 -ml-6 pl-6 flex items-center justify-between py-4">
-        <div class="font-semibold text-white">Projects</div>
-        <button class="text-red-400 font-bold py-2 px-4 rounded inline-flex items-center" @click="goToCreate()">
-          <font-awesome-icon icon="plus"  size="1x" />
-        </button>
+        <div class="font-semibold text-white">Videos</div>
     </div>
     <hr class="-mx-6"/>
     <template  v-for="(project, projectIndex) in projects" v-bind:key="projectIndex">
@@ -45,24 +42,24 @@ export default {
     }
   },
   created () {
-    this.axios.get(this.appURI + 'api/getProjects')
+    this.axios.get(this.appURI + 'api/getVideos', {
+      params: {
+        project_id: this.$store.state.project_id
+      }
+    })
       .then(x => {
-        this.$store.state.mainProjects = x.data
+        this.$store.state.projects = x.data
       })
   },
   methods: {
     getAllFrames (project) {
-      this.$store.state.selectedMainProject = project
-      this.$store.state.project_id = project.id
-      this.$router.push('/upload')
-    },
-    goToCreate () {
-      this.$router.push('/')
+      this.$store.state.selectedProject = project
+      this.$router.push('/project')
     }
   },
   computed: {
     projects () {
-      return this.$store.state.mainProjects
+      return this.$store.state.projects
     },
     appURI () {
       return this.$store.state.appURI

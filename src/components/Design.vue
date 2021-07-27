@@ -5,9 +5,8 @@
   >
   <template v-if="selectedDetail && selectedDetail.boundingBoxes && selectedDetail.boundingBoxes.length > 0">
   <section  class="mx-5 w-full h-auto relative z-10 scrollbar text-none overflow-auto" v-for="(boundingBox, boundingKey) in selectedDetail.boundingBoxes" v-bind:key="boundingKey">
-  {{boundingBox}}
      <header
-        class="text-white text-sm font-medium tracking-wide flex justify-between items-center py-3 ">
+        class="text-white text-lg font-medium tracking-wide flex justify-between items-center py-3 ">
         <div class="flex items-center leading-5 py-px">{{boundingBox.name}}</div>
       </header>
      <div >
@@ -15,15 +14,40 @@
                                 <option v-for="(type, typeKey) in selectedDetail.classDetails" v-bind:key="typeKey" :value="type.id">{{type.class_name}}</option>
                               </select>
        </div>
-      <div v-if="boundingBox.attributeValues && boundingBox.attributeValues.attribute_type">
-      {{boundingBox.attributeValues.attribute_type}}
+      <div v-if="boundingBox && boundingBox.attributeValues">
+        <template v-for="(attribute, attributeIndex) in boundingBox.attributeValues" v-bind:key="attributeIndex">
+          <div class="my-4" v-if="attribute.attribute_type==='YesNo'">
+          <div class="text-white text-sm font-medium tracking-wide flex justify-between items-center py-1">{{attribute.attribute_name}}</div>
+            <select v-model="attribute.setValue" class="border rounded w-3/4 py-2 px-3 text-grey-darker border-0 relative self-center outline-none">
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="my-4" v-if="attribute.attribute_type==='select'">
+          <div class="text-white text-sm font-medium tracking-wide flex justify-between items-center py-1">{{attribute.attribute_name}}</div>
+            <select v-model="attribute.setValue" class="border rounded w-3/4 py-2 px-3 text-grey-darker border-0 relative self-center outline-none">
+              <option v-for="(type, typeKey) in attribute.attribute_Values" v-bind:key="typeKey" :value="type">{{type}}</option>
+            </select>
+          </div>
+        </template>
       </div>
    </section>
   </template>
   </aside>
 </template>
 <script>
+
 export default {
+  watch: {
+    selectedDetail: {
+      immediate: true,
+      deep: true,
+      handler (newValue, oldValue) {
+        console.log(newValue, oldValue)
+        this.selectedDetail = newValue
+      }
+    }
+  },
   computed: {
     details () {
       return this.$store.state.selectedProject && this.$store.state.selectedProject.Details ? this.$store.state.selectedProject.Details : ''
@@ -32,7 +56,10 @@ export default {
       return this.$store.state.selectedImage
     },
     selectedDetail () {
-      return Object.values(this.details).filter(detail => detail.image_Location === this.selectedImage)[0]
+      return Object.values(this.details).find(detail => detail.image_Location === this.selectedImage)
+    },
+    selectedIndex () {
+      return Object.values(this.details).findIndex(detail => detail.image_Location === this.selectedImage)
     },
     designComponent () {
       return this.$store.state.designComponent
@@ -43,13 +70,14 @@ export default {
   },
   methods: {
     async getAttributes (boundingBox) {
+      var vm = this
       await this.axios.get(this.appURI + 'api/getAttributes', {
         params: {
           class_id: boundingBox.selectedClass
         }
       })
         .then(x => {
-          this.$store.state.commit('PUSH_ATTRIBUTE_VALUES', x.data[0])
+          vm.$store.commit('PUSH_ATTRIBUTE_VALUES', x.data)
         })
     }
   }

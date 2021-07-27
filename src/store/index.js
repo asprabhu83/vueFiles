@@ -4,6 +4,9 @@ export default createStore({
   state: {
     galleries: [],
     loading: false,
+    project_id: '',
+    mainProjects: [],
+    selectedMainProject: {},
     projects: [],
     selectedProject: {},
     selectedImage: 0,
@@ -26,7 +29,18 @@ export default createStore({
     PUSH_ATTRIBUTE_VALUES (state, payload) {
       state.selectedProject.Details.forEach(detail => {
         if (detail.image_Location === state.selectedImage) {
-          console.log(detail)
+          detail.boundingBoxes.forEach(boundingbox => {
+            if (boundingbox && boundingbox.attributeValues.length === 0) {
+              if (boundingbox.selectedClass !== '') {
+                payload.forEach(element => {
+                  if (element && element.attribute_Values) {
+                    element.attribute_Values = element.attribute_Values.split(',')
+                  }
+                })
+                boundingbox.attributeValues = payload
+              }
+            }
+          })
         }
       })
     }

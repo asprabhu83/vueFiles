@@ -106,7 +106,7 @@ export default {
     },
     async saveClass (classR) {
       await this.axios.post(this.appURI + 'api/createClass', {
-        projectid: this.$store.state.selectedProject.id,
+        projectid: this.$store.state.project_id,
         className: classR.className
       })
         .then(x => {
