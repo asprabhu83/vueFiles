@@ -54,7 +54,7 @@ export default {
     getAllFrames (project) {
       this.$store.state.selectedMainProject = project
       this.$store.state.project_id = project.id
-      this.$router.push('/upload')
+      this.$router.push('/project')
     },
     goToCreate () {
       this.$router.push('/')

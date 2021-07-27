@@ -13,6 +13,9 @@
         <div class="rounded px-6" v-if="projects && projects.length > 0">
     <div class="sticky top-0 z-50 border-l-4 border-red-400 -ml-6 pl-6 flex items-center justify-between py-4">
         <div class="font-semibold text-white">Videos</div>
+        <button class="text-red-400 font-bold py-2 px-4 rounded inline-flex items-center" @click="goToUpload()">
+          <font-awesome-icon icon="plus"  size="1x" />
+        </button>
     </div>
     <hr class="-mx-6"/>
     <template  v-for="(project, projectIndex) in projects" v-bind:key="projectIndex">
@@ -55,6 +58,9 @@ export default {
     getAllFrames (project) {
       this.$store.state.selectedProject = project
       this.$router.push('/project')
+    },
+    goToCreate () {
+      this.$router.push('/upload')
     }
   },
   computed: {
