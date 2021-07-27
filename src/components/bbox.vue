@@ -2,9 +2,9 @@
    <svg v-if="imgsize" :viewBox="'0 0 ' + imgsize.width + ' ' + imgsize.height" id="viewport" onload="makeDraggable">
       <image :xlink:href="src" width="100%" height="100%"/>
       <rect
-        v-for="(bb, i) in bbs" :key="'bb' + i"
-        :x="bb.left * imgsize.width || '0'" :y="bb.top * imgsize.height || '0'" :width="bb.width * imgsize.width || '0'" :height="bb.height * imgsize.height || '0'"
-        fill="none" :stroke="bbcolor || '#EF5350'" :stroke-width="bbstroke || '2'" vector-effect="non-scaling-stroke" shape-rendering="crispEdges"/>
+        v-for="(bb, i) in bbs.boundingBoxes" :key="'bb' + i"
+        :x="bb.x || '0'" :y="bb.y || '0'" :width="bb.w || '0'" :height="bb.h  || '0'"
+        fill="#EF5350" fill-opacity='0.4' :stroke="bbcolor || '#EF5350'" :stroke-width="bbstroke || '2'" vector-effect="non-scaling-stroke" shape-rendering="crispEdges"/>
     </svg>
 </template>
 <script>
@@ -47,8 +47,19 @@ export default {
       this.createPoints()
     }
   },
+  computed: {
+    projectDetails () {
+      return this.$store.state.selectedProject.Details
+    },
+    selectedImage () {
+      return this.$store.state.selectedImage
+    },
+    bbs () {
+      return Object.values(this.projectDetails).filter(detail => detail.image_Location === this.selectedImage)[0]
+    }
+  },
   methods: {
-    handleMouseDown (event) {
+    async handleMouseDown (event) {
       if (event.target.classList.contains('draggable')) {
         this.selectedElement = event.target
         this.offset = this.getMousePosition(event)
@@ -103,7 +114,7 @@ export default {
           start.x = p.x
           start.y = p.y
         }
-        const endDraw = (e) => {
+        const endDraw = async (e) => {
           const p = this.svgPoint(this.svgElement, e.clientX, e.clientY)
           const w = Math.abs(p.x - start.x)
           const h = Math.abs(p.y - start.y)
@@ -112,9 +123,12 @@ export default {
           box.y = start.y
           box.w = w
           box.h = h
+          box.selectedClass = ''
+          box.selectedAttribute = ''
+          box.attributeValues = []
+          box.name = 'Bounding Box Name'
           this.boundingBoxes.push(box)
-          console.log(this.boundingBoxes)
-          box.printCoordinates()
+          this.$store.commit('PUSH_BOUNDING_BOX', this.boundingBoxes)
           this.svgElement.removeEventListener('mousemove', drawRect)
           this.svgElement.removeEventListener('mouseup', endDraw)
         }

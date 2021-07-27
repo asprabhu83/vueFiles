@@ -3,54 +3,54 @@
     id="right-panel"
     class="relative bg-gray-800 border-l border-gray-600 h-full w-64 flex flex-col overflow-hidden flex-shrink-0"
   >
-      <header
-        class="text-white text-xs font-medium tracking-wide flex justify-between items-center p-3 pb-0 ">
-        <div class="flex items-center leading-5 py-px">Design</div>
+  <template v-if="selectedDetail && selectedDetail.boundingBoxes && selectedDetail.boundingBoxes.length > 0">
+  <section  class="mx-5 w-full h-auto relative z-10 scrollbar text-none overflow-auto" v-for="(boundingBox, boundingKey) in selectedDetail.boundingBoxes" v-bind:key="boundingKey">
+  {{boundingBox}}
+     <header
+        class="text-white text-sm font-medium tracking-wide flex justify-between items-center py-3 ">
+        <div class="flex items-center leading-5 py-px">{{boundingBox.name}}</div>
       </header>
-      <section  class="w-full h-full relative z-10 scrollbar text-none overflow-auto">
-      <div v-for="(design, designIndex) in designs" v-bind:key="designIndex" class="mt-2">
-        <h5 class="items-center bg-white mb-2 text-center">{{design.designLabel}}</h5>
-        <select v-model="design.designValue" class="ml-2" @change="setValueToLayer()" v-if="design.designType === 'select'">
-          <option value="">--- Select ---</option>
-          <option v-for="(item, itemIndex) in design.values" v-bind:key="itemIndex" :value="item.classValue">{{item.displayText}}</option>
-        </select>
-        <input type="color" id="favcolor" name="favcolor" class="ml-2" v-model="design.designValue" v-if="design.designType === 'color'" list="presetColors" @change="setValueToLayer()">
-        <datalist id="presetColors" v-if="design.designType === 'color'">
-          <option v-for="(item, itemIndex) in design.values" v-bind:key="itemIndex">{{item.displayText}}</option>
-      </datalist>
+     <div >
+     <select v-model="boundingBox.selectedClass" class="border rounded w-3/4 py-2 px-3 text-grey-darker border-0 relative self-center outline-none" @change="getAttributes(boundingBox)">
+                                <option v-for="(type, typeKey) in selectedDetail.classDetails" v-bind:key="typeKey" :value="type.id">{{type.class_name}}</option>
+                              </select>
+       </div>
+      <div v-if="boundingBox.attributeValues && boundingBox.attributeValues.attribute_type">
+      {{boundingBox.attributeValues.attribute_type}}
       </div>
-      </section>
+   </section>
+  </template>
   </aside>
 </template>
-
 <script>
 export default {
   computed: {
-    designs () {
-      return this.$store.state.Designs
+    details () {
+      return this.$store.state.selectedProject && this.$store.state.selectedProject.Details ? this.$store.state.selectedProject.Details : ''
     },
-    Layers () {
-      return this.$store.state.Layers
+    selectedImage () {
+      return this.$store.state.selectedImage
+    },
+    selectedDetail () {
+      return Object.values(this.details).filter(detail => detail.image_Location === this.selectedImage)[0]
+    },
+    designComponent () {
+      return this.$store.state.designComponent
+    },
+    appURI () {
+      return this.$store.state.appURI
     }
   },
   methods: {
-    setValueToLayer () {
-      this.Layers.forEach(l => {
-        if (l.focusable) {
-          l.className = ''
-          this.designs.forEach(design => {
-            if (design.designType === 'color') {
-              design.values.forEach(color => {
-                if (color.displayText === design.designValue) {
-                  l.className = l.className + color.classValue + ' '
-                }
-              })
-            } else {
-              l.className = l.className + design.designValue + ' '
-            }
-          })
+    async getAttributes (boundingBox) {
+      await this.axios.get(this.appURI + 'api/getAttributes', {
+        params: {
+          class_id: boundingBox.selectedClass
         }
       })
+        .then(x => {
+          this.$store.state.commit('PUSH_ATTRIBUTE_VALUES', x.data[0])
+        })
     }
   }
 }

@@ -7,7 +7,7 @@
         class="w-full h-full relative z-10 scrollbar text-left text-none">
         <router-view/>
         </section>
-      <Design />
+      <Design :key="designComponent"/>
     </section>
     <Loading v-if="loading"/>
   </main>
@@ -30,8 +30,8 @@ export default {
     Layers () {
       return this.$store.state.Layers
     },
-    loading () {
-      return this.$store.state.loading
+    designComponent () {
+      return this.$store.state.designComponent
     }
   }
 }
