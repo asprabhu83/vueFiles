@@ -4,7 +4,7 @@
       <rect
         v-for="(bb, i) in bbs.boundingBoxes" :key="'bb' + i"
         :x="bb.x || '0'" :y="bb.y || '0'" :width="bb.w || '0'" :height="bb.h  || '0'"
-        fill="#EF5350" fill-opacity='0.4' :stroke="bbcolor || '#EF5350'" :stroke-width="bbstroke || '2'" vector-effect="non-scaling-stroke" shape-rendering="crispEdges"/>
+        fill="#EF5350" fill-opacity='0.4' :stroke="bbcolor || '#EF5350'" :stroke-width="bbstroke || '2'" vector-effect="non-scaling-stroke" shape-rendering="crispEdges" class="draggable" :class="i"/>
     </svg>
 </template>
 <script>
@@ -59,8 +59,60 @@ export default {
     }
   },
   methods: {
+    pointIn (el, x, y) {
+      this.svgPoint = (elem, x, y) => {
+        const p = this.svgElement.createSVGPoint()
+        p.x = x
+        p.y = y
+        return p.matrixTransform(el.getTransformToElement(this.svgElement).inverse())
+      }
+    },
+    cursorPoint (evt) {
+      this.svgPoint = (elem, x, y) => {
+        const p = this.svgElement.createSVGPoint()
+        p.x = evt.clientX
+        p.y = evt.clientY
+        return p.matrixTransform(this.svgElement.getScreenCTM().inverse())
+      }
+    },
     async handleMouseDown (event) {
+      var svgElement = this.svgElement
       if (event.target.classList.contains('draggable')) {
+        for (var a = this.svgElement.querySelectorAll('rect.draggable'), i = 0, len = a.length; i < len; ++i) {
+          const createOn = (root, name, prop) => {
+            var el = document.createElementNS('http://www.w3.org/2000/svg', name)
+            for (var a in prop) {
+              if (prop && Object.prototype.hasOwnProperty.call(prop, 'a')) {
+                el.setAttribute(a, prop[a])
+              }
+            }
+            return root.appendChild(el)
+          }
+          const rectCorner = (rect) => {
+            var p = this.svgElement.createSVGPoint()
+            p.x = rect.x.animVal.value + rect.width.animVal.value
+            p.y = rect.y.animVal.value + rect.height.animVal.value
+            return p.matrixTransform(rect.getTransformToElement(svgElement))
+          }
+          (function (rect) {
+            var dot = createOn(svgElement, 'circle', { class: 'drag sizer', cx: 0, cy: 0, r: 5 })
+            var moveDotToRect = function () {
+              var corner = rectCorner(rect)
+              console.log(corner)
+              dot.setAttribute('cx', corner.x)
+              dot.setAttribute('cy', corner.y)
+            }
+            moveDotToRect()
+            rect.addEventListener('dragged', moveDotToRect, false)
+            dot.addEventListener('dragged', function () {
+              var rectXY = this.pointIn(rect, dot.cx.animVal.value, dot.cy.animVal.value)
+              var w = Math.max(rectXY.x - rect.x.animVal.value, 1)
+              var h = Math.max(rectXY.y - rect.y.animVal.value, 1)
+              rect.setAttribute('width', w)
+              rect.setAttribute('height', h)
+            }, false)
+          })(a[i])
+        }
         this.selectedElement = event.target
         this.offset = this.getMousePosition(event)
         var transforms = this.selectedElement.transform.baseVal
@@ -127,8 +179,11 @@ export default {
           box.selectedAttribute = ''
           box.attributeValues = []
           box.name = 'Bounding Box Name'
-          this.boundingBoxes.push(box)
-          this.$store.commit('PUSH_BOUNDING_BOX', this.boundingBoxes)
+          if (w > 10 && h > 10) {
+            this.boundingBoxes.push(box)
+            this.$store.commit('PUSH_BOUNDING_BOX', this.boundingBoxes)
+          }
+          this.svgElement.removeChild(rect)
           this.svgElement.removeEventListener('mousemove', drawRect)
           this.svgElement.removeEventListener('mouseup', endDraw)
         }

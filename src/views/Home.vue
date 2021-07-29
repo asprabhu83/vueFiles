@@ -1,11 +1,11 @@
 <template>
   <section class="py-8 px-4">
-  <h2 class="text-lg font-medium text-gray-900 truncate pb-8 px-1">Create Project</h2>
+  <h2 class="text-lg font-medium text-gray-900 truncate pb-8 px-1">Upload Video</h2>
  <form method="post" action="" enctype="multipart/form-data" ref="videoForm" class="w-full max-w-lg">
   <input type="hidden" name="projectId" id="projectId" v-model="projectId">
   <div class="w-full flex flex-wrap -mx-3 mb-6">
     <div class="w-1/2  px-3 mb-6 ">
-      <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="title" v-model="formData.title" placeholder="Enter Project Name">
+      <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="title" v-model="formData.title" placeholder="Video Title">
     </div>
   <div class="w-1/3  px-3 mb-6 md:mb-0">
     <label
@@ -67,6 +67,7 @@ export default {
         .then(x => {
           this.$store.state.projects = x.data
           this.$router.push('/project')
+          this.$store.state.loading = false
         })
     }
   },

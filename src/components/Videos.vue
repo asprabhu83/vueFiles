@@ -10,16 +10,16 @@
      <!-- <div v-for="(layer, layerIndex) in Layers" v-bind:key="layerIndex" class="block items-center text-xs font-medium p-2 mt-2" :class="layer.focusable?'bg-white text-black':'text-white'">
           {{layer.layerName}}
         </div> -->
-        <div class="rounded px-6" v-if="projects && projects.length > 0">
+        <div class="rounded px-6" >
     <div class="sticky top-0 z-50 border-l-4 border-red-400 -ml-6 pl-6 flex items-center justify-between py-4">
         <div class="font-semibold text-white">Videos</div>
         <button class="text-red-400 font-bold py-2 px-4 rounded inline-flex items-center" @click="goToUpload()">
           <font-awesome-icon icon="plus"  size="1x" />
         </button>
     </div>
-    <hr class="-mx-6"/>
-    <template  v-for="(project, projectIndex) in projects" v-bind:key="projectIndex">
-    <div class="flex items-center justify-between my-4" @click='getAllFrames(project)'>
+    <hr class="-mx-6" />
+    <template v-if="projects && projects.length > 0">
+    <div class="flex items-center justify-between my-4" @click='getAllFrames(project)'  v-for="(project, projectIndex) in projects" v-bind:key="projectIndex">
        <!-- <div class="w-16">
         <img class="w-12 h-12 rounded-full" :src="appURI + 'uploads/'+project.image_Location+'/thumb_0.jpg'">
         </div> -->
@@ -59,7 +59,7 @@ export default {
       this.$store.state.selectedProject = project
       this.$router.push('/project')
     },
-    goToCreate () {
+    goToUpload () {
       this.$router.push('/upload')
     }
   },
