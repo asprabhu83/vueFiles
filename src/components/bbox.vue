@@ -1,10 +1,26 @@
 <template>
-   <svg v-if="imgsize" :viewBox="'0 0 ' + imgsize.width + ' ' + imgsize.height" id="viewport" onload="makeDraggable">
+   <svg v-if="imgsize" :viewBox="'0 0 ' + imgsize.width + ' ' + imgsize.height" id="viewport">
       <image :xlink:href="src" width="100%" height="100%"/>
       <rect
         v-for="(bb, i) in bbs.boundingBoxes" :key="'bb' + i"
         :x="bb.x || '0'" :y="bb.y || '0'" :width="bb.w || '0'" :height="bb.h  || '0'"
-        fill="#EF5350" fill-opacity='0.4' :stroke="bbcolor || '#EF5350'" :stroke-width="bbstroke || '2'" vector-effect="non-scaling-stroke" shape-rendering="crispEdges" class="draggable" :class="i"/>
+        fill="#EF5350" fill-opacity='0.4' :stroke="bbcolor || '#EF5350'" :stroke-width="bbstroke || '2'" vector-effect="non-scaling-stroke" shape-rendering="crispEdges" class="draggable" :class="'bb-' + i"/>
+      <circle
+        v-for="(bb, i) in bbs.boundingBoxes" :key="'bb' + i"
+        :cx="bb.x + bb.w || '0'" :cy="bb.y || '0'" r=15
+        fill="#EF5350" fill-opacity='0.4' :stroke="bbcolor || '#EF5350'" :stroke-width="bbstroke || '2'" vector-effect="non-scaling-stroke" shape-rendering="crispEdges" class="resize" :class="'bb-' + i"/>
+      <circle
+        v-for="(bb, i) in bbs.boundingBoxes" :key="'bb' + i"
+        :cx="bb.x  || '0'" :cy="bb.y + bb.h || '0'" r=15
+        fill="#EF5350" fill-opacity='0.4' :stroke="bbcolor || '#EF5350'" :stroke-width="bbstroke || '2'" vector-effect="non-scaling-stroke" shape-rendering="crispEdges" class="resize" :class="'bb-' + i"/>
+      <circle
+        v-for="(bb, i) in bbs.boundingBoxes" :key="'bb' + i"
+        :cx="bb.x  || '0'" :cy="bb.y || '0'" r=15
+        fill="#EF5350" fill-opacity='0.4' :stroke="bbcolor || '#EF5350'" :stroke-width="bbstroke || '2'" vector-effect="non-scaling-stroke" shape-rendering="crispEdges" class="resize" :class="'bb-' + i"/>
+      <circle
+        v-for="(bb, i) in bbs.boundingBoxes" :key="'bb' + i"
+        :cx="bb.x + bb.w || '0'" :cy="bb.y + bb.h || '0'" r=15
+        fill="#EF5350" fill-opacity='0.4' :stroke="bbcolor || '#EF5350'" :stroke-width="bbstroke || '2'" vector-effect="non-scaling-stroke" shape-rendering="crispEdges" class="resize" :class="'bb-' + i"/>
     </svg>
 </template>
 <script>
@@ -26,6 +42,7 @@ export default {
       isDrawing: false,
       baseImage: Object,
       selectedElement: false,
+      draggingElement: '',
       offset: null,
       transform: null,
       annotation: {
@@ -55,89 +72,57 @@ export default {
       return this.$store.state.selectedImage
     },
     bbs () {
-      return Object.values(this.projectDetails).filter(detail => detail.image_Location === this.selectedImage)[0]
+      var temp
+      Object.values(this.projectDetails).forEach(detail => {
+        if (detail.image_Location === this.selectedImage) {
+          temp = detail
+        }
+      })
+      return temp
     }
   },
   methods: {
-    pointIn (el, x, y) {
-      this.svgPoint = (elem, x, y) => {
-        const p = this.svgElement.createSVGPoint()
-        p.x = x
-        p.y = y
-        return p.matrixTransform(el.getTransformToElement(this.svgElement).inverse())
-      }
-    },
-    cursorPoint (evt) {
-      this.svgPoint = (elem, x, y) => {
-        const p = this.svgElement.createSVGPoint()
-        p.x = evt.clientX
-        p.y = evt.clientY
-        return p.matrixTransform(this.svgElement.getScreenCTM().inverse())
-      }
-    },
     async handleMouseDown (event) {
-      var svgElement = this.svgElement
       if (event.target.classList.contains('draggable')) {
-        for (var a = this.svgElement.querySelectorAll('rect.draggable'), i = 0, len = a.length; i < len; ++i) {
-          const createOn = (root, name, prop) => {
-            var el = document.createElementNS('http://www.w3.org/2000/svg', name)
-            for (var a in prop) {
-              if (prop && Object.prototype.hasOwnProperty.call(prop, 'a')) {
-                el.setAttribute(a, prop[a])
-              }
-            }
-            return root.appendChild(el)
-          }
-          const rectCorner = (rect) => {
-            var p = this.svgElement.createSVGPoint()
-            p.x = rect.x.animVal.value + rect.width.animVal.value
-            p.y = rect.y.animVal.value + rect.height.animVal.value
-            return p.matrixTransform(rect.getTransformToElement(svgElement))
-          }
-          (function (rect) {
-            var dot = createOn(svgElement, 'circle', { class: 'drag sizer', cx: 0, cy: 0, r: 5 })
-            var moveDotToRect = function () {
-              var corner = rectCorner(rect)
-              console.log(corner)
-              dot.setAttribute('cx', corner.x)
-              dot.setAttribute('cy', corner.y)
-            }
-            moveDotToRect()
-            rect.addEventListener('dragged', moveDotToRect, false)
-            dot.addEventListener('dragged', function () {
-              var rectXY = this.pointIn(rect, dot.cx.animVal.value, dot.cy.animVal.value)
-              var w = Math.max(rectXY.x - rect.x.animVal.value, 1)
-              var h = Math.max(rectXY.y - rect.y.animVal.value, 1)
-              rect.setAttribute('width', w)
-              rect.setAttribute('height', h)
-            }, false)
-          })(a[i])
-        }
+        var objectPosition = event.target.classList[1].toString().substring(3)
         this.selectedElement = event.target
-        this.offset = this.getMousePosition(event)
-        var transforms = this.selectedElement.transform.baseVal
-        if (transforms.length === 0 ||
-          transforms.getItem(0).type !== SVGTransform.SVG_TRANSFORM_TRANSLATE) {
-          var translate = this.svgElement.createSVGTransform()
-          translate.setTranslate(0, 0)
-          this.selectedElement.transform.baseVal.insertItemBefore(translate, 0)
-        }
-        this.transform = transforms.getItem(0)
-        this.offset.x -= this.transform.matrix.e
-        this.offset.y -= this.transform.matrix.f
         const drag = (evt) => {
           if (this.selectedElement) {
             evt.preventDefault()
-            var coord = this.getMousePosition(evt)
-            this.transform.setTranslate(coord.x - this.offset.x, coord.y - this.offset.y)
+            const p = this.svgPoint(this.svgElement, evt.clientX, evt.clientY)
+            this.bbs.boundingBoxes[objectPosition].x = p.x
+            this.bbs.boundingBoxes[objectPosition].y = p.y
           }
         }
         const endDrag = (evt) => {
+          this.svgElement.removeEventListener('mousemove', drag)
+          this.svgElement.removeEventListener('mouseup', endDrag)
+          this.svgElement.removeEventListener('mouseleave', endDrag)
           this.selectedElement = null
         }
         this.svgElement.addEventListener('mousemove', drag)
         this.svgElement.addEventListener('mouseup', endDrag)
         this.svgElement.addEventListener('mouseleave', endDrag)
+      } else if (event.target.classList.contains('resize')) {
+        objectPosition = event.target.classList[1].toString().substring(3)
+        this.draggingElement = event.target
+        const resize = (evt) => {
+          if (this.draggingElement) {
+            evt.preventDefault()
+            const p = this.svgPoint(this.svgElement, evt.clientX, evt.clientY)
+            this.bbs.boundingBoxes[objectPosition].w = Math.max(p.x, 1)
+            this.bbs.boundingBoxes[objectPosition].h = Math.max(p.y, 1)
+          }
+        }
+        const endresize = (evt) => {
+          this.svgElement.removeEventListener('mousemove', resize)
+          this.svgElement.removeEventListener('mouseup', endresize)
+          this.svgElement.removeEventListener('mouseleave', endresize)
+          this.draggingElement = null
+        }
+        this.svgElement.addEventListener('mousemove', resize)
+        this.svgElement.addEventListener('mouseup', endresize)
+        this.svgElement.addEventListener('mouseleave', endresize)
       } else {
         const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
         const start = this.svgPoint(this.svgElement, event.clientX, event.clientY)
@@ -192,10 +177,10 @@ export default {
       }
     },
     getMousePosition (evt) {
-      var CTM = this.svgElement.getScreenCTM()
+      // var CTM = this.svgElement.getScreenCTM()
       return {
-        x: (evt.clientX - CTM.e) / CTM.a,
-        y: (evt.clientY - CTM.f) / CTM.d
+        x: evt.clientX,
+        y: evt.clientY
       }
     },
     createPoints () {
