@@ -3,7 +3,7 @@
     <NavBar />
     <section class="relative flex flex-1 flex-row">
     <Layers v-if="$route.name !=='Editor'"/>
-    <Videos  v-if="$route.name==='Grid' || $route.name==='Editor'"/>
+     <Videos  v-if="$route.name==='Grid' || $route.name==='Editor' || $route.name==='Home'"/>
       <section
         class="w-full h-full relative z-10 scrollbar text-left text-none">
         <router-view/>
@@ -30,11 +30,11 @@ export default {
     Videos
   },
   computed: {
-    Layers () {
-      return this.$store.state.Layers
-    },
     designComponent () {
       return this.$store.state.designComponent
+    },
+    loading () {
+      return this.$store.state.loading
     }
   }
 }

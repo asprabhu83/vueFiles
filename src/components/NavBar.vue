@@ -46,7 +46,7 @@ import Axios from 'axios'
 export default {
   methods: {
     Logout () {
-      Axios.post(process.env.VUE_APP_API_URI_PREFIX + '/api/users/logout')
+      Axios.post(process.env.VUE_APP_API_URI_PREFIX + 'api/users/logout')
         .then(() => {
           localStorage.removeItem('user_token')
           localStorage.removeItem('id')

@@ -28,23 +28,23 @@ const routes = [
         path: '/create-user',
         name: 'CreateUser',
         component: CreateUser
+      },
+      {
+        path: '/upload',
+        name: 'Home',
+        component: Home
+      },
+      {
+        path: '/project',
+        name: 'Grid',
+        component: Grid
+      },
+      {
+        path: '/editor',
+        name: 'Editor',
+        component: Editor
       }
     ]
-  },
-  {
-    path: '/upload',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/project',
-    name: 'Grid',
-    component: Grid
-  },
-  {
-    path: '/editor',
-    name: 'Editor',
-    component: Editor
   }
 ]
 

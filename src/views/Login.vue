@@ -1,7 +1,7 @@
 <template>
   <div class="login_page">
     <div
-      class="w-full h-screen flex items-center justify-center login_full_scrn"
+      class="w-full h-screen flex items-center justify-center login_full_scrn bg-gray-900"
     >
       <form
         class="
@@ -130,7 +130,7 @@ export default {
     Login () {
       var btn = document.querySelector('.login_btn')
       btn.innerHTML = 'Loading'
-      Axios.post(process.env.VUE_APP_API_URI_PREFIX + '/api/users/login', {
+      Axios.post(process.env.VUE_APP_API_URI_PREFIX + 'api/users/login', {
         email: this.email,
         password: this.password
       })

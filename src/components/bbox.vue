@@ -4,7 +4,7 @@
       <rect
         v-for="(bb, i) in bbs.boundingBoxes" :key="'bb' + i"
         :x="bb.x || '0'" :y="bb.y || '0'" :width="bb.w || '0'" :height="bb.h  || '0'"
-        fill="#EF5350" fill-opacity='0.4' :stroke="bbcolor || '#EF5350'" :stroke-width="bbstroke || '2'" vector-effect="non-scaling-stroke" shape-rendering="crispEdges" class="draggable" :class="'bb-' + i"/>
+        fill="#EF5350" fill-opacity='0.4' :stroke="bbcolor || '#EF5350'" :stroke-width="bbstroke || '2'" vector-effect="non-scaling-stroke" shape-rendering="crispEdges" class="draggable" :class="'bb-' + i + ' ' + 'cursor-move'"/>
       <circle
         v-for="(bb, i) in bbs.boundingBoxes" :key="'bb' + i"
         :cx="bb.x + bb.w || '0'" :cy="bb.y || '0'" r=15
@@ -88,10 +88,14 @@ export default {
         this.selectedElement = event.target
         const drag = (evt) => {
           if (this.selectedElement) {
+            var start = {
+              x: this.bbs.boundingBoxes[objectPosition].x,
+              y: this.bbs.boundingBoxes[objectPosition].y
+            }
             evt.preventDefault()
             const p = this.svgPoint(this.svgElement, evt.clientX, evt.clientY)
-            this.bbs.boundingBoxes[objectPosition].x = p.x
-            this.bbs.boundingBoxes[objectPosition].y = p.y
+            this.bbs.boundingBoxes[objectPosition].x = p.x - start.x
+            this.bbs.boundingBoxes[objectPosition].y = p.y - start.y
           }
         }
         const endDrag = (evt) => {
