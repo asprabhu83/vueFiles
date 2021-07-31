@@ -150,7 +150,6 @@
 </template>
 
 <script>
-import Axios from 'axios'
 export default {
   data () {
     return {
@@ -167,6 +166,9 @@ export default {
     AddUser () {
       var btn = document.querySelector('.reg_btn')
       btn.innerHTML = 'Loading'
+      this.success = false
+      this.empty_valid = false
+      this.email_valid = false
       var err = 0
       var emailRegex =
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -178,10 +180,8 @@ export default {
       ) {
         err++
         this.empty_valid = true
-        this.email_valid = false
         btn.innerHTML = 'Add User'
       } else {
-        this.empty_valid = false
         if (!emailRegex.test(this.email)) {
           err++
           this.email_valid = true
@@ -189,9 +189,7 @@ export default {
         }
       }
       if (err === 0) {
-        this.empty_valid = false
-        this.email_valid = false
-        Axios.post(process.env.VUE_APP_API_URI_PREFIX + '/api/users/register', {
+        this.axios.post(process.env.VUE_APP_API_URI_PREFIX + '/api/users/register', {
           email: this.email,
           password: this.password,
           user_role: this.userRole,

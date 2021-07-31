@@ -117,7 +117,6 @@
 </template>
 
 <script>
-import Axios from 'axios'
 export default {
   data () {
     return {
@@ -126,11 +125,16 @@ export default {
       error: false
     }
   },
+  mounted () {
+    if (localStorage.getItem('user_token')) {
+      this.$router.push('/')
+    }
+  },
   methods: {
     Login () {
       var btn = document.querySelector('.login_btn')
       btn.innerHTML = 'Loading'
-      Axios.post(process.env.VUE_APP_API_URI_PREFIX + 'api/users/login', {
+      this.axios.post(process.env.VUE_APP_API_URI_PREFIX + 'api/users/login', {
         email: this.email,
         password: this.password
       })
@@ -144,7 +148,7 @@ export default {
           localStorage.setItem('name', name)
           localStorage.setItem('user_role', userRole)
           if (token !== '') {
-            this.$router.push('/dashboard')
+            this.$router.push('/')
           }
           btn.innerHTML = 'Sign In'
         })

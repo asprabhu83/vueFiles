@@ -10,17 +10,17 @@ import CreateUser from '../views/CreateUser.vue'
 
 const routes = [
   {
-    path: '/',
+    path: '/login',
     name: 'Login',
     component: Login
   },
   {
-    path: '/dashboard',
+    path: '/',
     name: 'Dashboard',
     component: Dashboard,
     children: [
       {
-        path: '/dashboard',
+        path: '/',
         name: 'Project',
         component: Project
       },
@@ -54,10 +54,10 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const publicPages = ['/']
+  const publicPages = ['/login']
   const authRequired = !publicPages.includes(to.path)
   if (authRequired && !localStorage.getItem('user_token')) {
-    return next('/')
+    return next('/login')
   } else {
     next()
   }
