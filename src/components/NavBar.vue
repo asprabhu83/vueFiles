@@ -17,7 +17,7 @@
           <div class="lg:flex lg:flex-grow items-center">
             <ul class="flex flex-col lg:flex-row list-none">
               <li class="nav-item">
-                <router-link  class="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"  to="/dashboard" >Projects</router-link>
+                <router-link  class="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"  to="/" >Projects</router-link>
               </li>
               <li class="nav-item">
                 <a class="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75" href="#pablo">
@@ -42,11 +42,10 @@
 </template>
 
 <script>
-import Axios from 'axios'
 export default {
   methods: {
     Logout () {
-      Axios.post(process.env.VUE_APP_API_URI_PREFIX + '/api/users/logout')
+      this.axios.post(process.env.VUE_APP_API_URI_PREFIX + '/api/users/logout')
         .then(() => {
           localStorage.removeItem('user_token')
           localStorage.removeItem('id')

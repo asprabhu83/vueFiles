@@ -117,7 +117,6 @@
 </template>
 
 <script>
-import Axios from 'axios'
 export default {
   data () {
     return {
@@ -135,7 +134,7 @@ export default {
     Login () {
       var btn = document.querySelector('.login_btn')
       btn.innerHTML = 'Loading'
-      Axios.post(process.env.VUE_APP_API_URI_PREFIX + '/api/users/login', {
+      this.axios.post(process.env.VUE_APP_API_URI_PREFIX + '/api/users/login', {
         email: this.email,
         password: this.password
       })

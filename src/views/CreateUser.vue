@@ -150,7 +150,6 @@
 </template>
 
 <script>
-import Axios from 'axios'
 export default {
   data () {
     return {
@@ -190,7 +189,7 @@ export default {
         }
       }
       if (err === 0) {
-        Axios.post(process.env.VUE_APP_API_URI_PREFIX + '/api/users/register', {
+        this.axios.post(process.env.VUE_APP_API_URI_PREFIX + '/api/users/register', {
           email: this.email,
           password: this.password,
           user_role: this.userRole,
