@@ -66,6 +66,7 @@ export default {
         .then(x => {
           this.$store.state.mainProjects = x.data
         })
+      this.$store.state.loading = true
       this.activeTab = 1
     }
   },
