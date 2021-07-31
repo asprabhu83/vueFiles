@@ -52,7 +52,7 @@ export default {
           localStorage.removeItem('id')
           localStorage.removeItem('name')
           localStorage.removeItem('user_role')
-          this.$router.push('/')
+          this.$router.push('/login')
         })
         .catch((error) => {
           console.log(error)
