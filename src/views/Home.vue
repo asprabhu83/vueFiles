@@ -7,6 +7,9 @@
     <div class="w-1/2  px-3 mb-6 ">
       <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="title" v-model="formData.title" placeholder="Video Title">
     </div>
+    <div class="w-1/2  px-3 mb-6 ">
+      <input type="number" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="fps" v-model="formData.fps" placeholder="Frames Per Second">
+    </div>
   <div class="w-1/3  px-3 mb-6 md:mb-0">
     <label
   class="w-60 flex inline-flex items-center items-center px-4 py-1.5 bg-white hover:bg-gray-600 rounded-md shadow-md tracking-wide font-medium uppercase border border-blue cursor-pointer hover:bg-white-600 hover:text-white text-gray-600 ease-linear transition-all duration-150">

@@ -4,7 +4,7 @@
     <div><h2 class="text-lg font-medium text-gray-900 truncate pb-8 px-1">{{project.project_name}}</h2>
    <div class="flex flex-wrap -mx-4 -mb-8">
       <div class="md:w-1/4 px-4 mb-8" v-for="(detail, key) in project.Details" v-bind:key="key">
-        <img class="rounded shadow-md" :src="appURI + 'uploads/'+detail.image_Location" alt="" @click="editImage(detail, project)">
+        <img class="rounded shadow-md" :src="appURI + 'uploads/'+detail.thumb_image_Location" alt="" @click="editImage(detail, project)">
       </div>
     </div></div>
     </div>
