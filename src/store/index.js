@@ -21,8 +21,9 @@ export default createStore({
     },
     PUSH_BOUNDING_BOX (state, payload) {
       state.selectedProject.Details.forEach(detail => {
+        console.log(payload)
         if (detail.image_Location === state.selectedImage) {
-          detail.boundingBoxes = payload
+          detail.boundingBoxes.push(payload)
         }
       })
     },

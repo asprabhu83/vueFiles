@@ -83,19 +83,27 @@ export default {
   },
   methods: {
     async handleMouseDown (event) {
+      var pt = this.svgElement.createSVGPoint()
       if (event.target.classList.contains('draggable')) {
         var objectPosition = event.target.classList[1].toString().substring(3)
+        console.log(event.target)
+        var cursorPoint = (e) => {
+          pt.x = e.clientX
+          pt.y = e.clientY
+          return pt.matrixTransform(this.svgElement.getScreenCTM().inverse())
+        }
+        var x = event.target.tagName === 'circle' ? 'cx' : 'x'
+        var y = event.target.tagName === 'circle' ? 'cy' : 'y'
+        var mouseStart = cursorPoint(event)
+        var elementStart = { x: event.target[x].animVal.value, y: event.target[y].animVal.value }
         this.selectedElement = event.target
         const drag = (evt) => {
+          var current = cursorPoint(evt)
           if (this.selectedElement) {
-            var start = {
-              x: this.bbs.boundingBoxes[objectPosition].x,
-              y: this.bbs.boundingBoxes[objectPosition].y
-            }
-            evt.preventDefault()
-            const p = this.svgPoint(this.svgElement, evt.clientX, evt.clientY)
-            this.bbs.boundingBoxes[objectPosition].x = p.x - start.x
-            this.bbs.boundingBoxes[objectPosition].y = p.y - start.y
+            pt.x = current.x - mouseStart.x
+            pt.y = current.y - mouseStart.y
+            this.bbs.boundingBoxes[objectPosition].x = elementStart.x + pt.x
+            this.bbs.boundingBoxes[objectPosition].y = elementStart.y + pt.y
           }
         }
         const endDrag = (evt) => {
@@ -109,13 +117,24 @@ export default {
         this.svgElement.addEventListener('mouseleave', endDrag)
       } else if (event.target.classList.contains('resize')) {
         objectPosition = event.target.classList[1].toString().substring(3)
+        console.log(event)
         this.draggingElement = event.target
+        const pointIn = (n, e) => {
+          console.log(pt)
+          pt.x = e.target.cx.animVal.value
+          pt.y = e.target.cy.animVal.value
+          return pt.matrixTransform(n.getTransformToElement(this.svgElement).inverse())
+        }
         const resize = (evt) => {
           if (this.draggingElement) {
-            evt.preventDefault()
-            const p = this.svgPoint(this.svgElement, evt.clientX, evt.clientY)
-            this.bbs.boundingBoxes[objectPosition].w = Math.max(p.x, 1)
-            this.bbs.boundingBoxes[objectPosition].h = Math.max(p.y, 1)
+            var parentNode = event.target.parentNode.children
+            parentNode.forEach(node => {
+              if (node.classList[1] === event.target.classList[1] && node.classList.contains('draggable')) {
+                var p = pointIn(node, event)
+                this.bbs.boundingBoxes[objectPosition].w = Math.max(p.x - node.x.animVal.value, 1)
+                this.bbs.boundingBoxes[objectPosition].h = Math.max(p.y - node.y.animVal.value, 1)
+              }
+            })
           }
         }
         const endresize = (evt) => {
@@ -169,8 +188,7 @@ export default {
           box.attributeValues = []
           box.name = 'Bounding Box Name'
           if (w > 10 && h > 10) {
-            this.boundingBoxes.push(box)
-            this.$store.commit('PUSH_BOUNDING_BOX', this.boundingBoxes)
+            this.$store.commit('PUSH_BOUNDING_BOX', box)
           }
           this.svgElement.removeChild(rect)
           this.svgElement.removeEventListener('mousemove', drawRect)
