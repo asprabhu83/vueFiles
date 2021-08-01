@@ -1,5 +1,5 @@
 <template>
-   <svg v-if="imgsize" :viewBox="'0 0 ' + imgsize.width + ' ' + imgsize.height" id="viewport" version="1.1" baseProfile="full">
+   <svg v-if="imgsize" :viewBox="'0 0 ' + imgsize.width + ' ' + imgsize.height" id="viewport" version="1.1" baseProfile="full" :class="bboxTool? 'draw-box cursor-crosshair':''">
       <image :xlink:href="src" width="100%" height="100%"/>
       <g>
       <rect
@@ -64,6 +64,9 @@ export default {
     }
   },
   computed: {
+    bboxTool () {
+      return this.$store.state.bboxTool
+    },
     projectDetails () {
       return this.$store.state.selectedProject.Details
     },
@@ -154,7 +157,7 @@ export default {
         this.svgElement.addEventListener('mousemove', resize)
         this.svgElement.addEventListener('mouseup', endresize)
         this.svgElement.addEventListener('mouseleave', endresize)
-      } else {
+      } else if (this.bboxTool) {
         const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
         const start = this.svgPoint(this.svgElement, event.clientX, event.clientY)
         const drawRect = (e) => {
@@ -201,6 +204,7 @@ export default {
           this.svgElement.removeChild(rect)
           this.svgElement.removeEventListener('mousemove', drawRect)
           this.svgElement.removeEventListener('mouseup', endDraw)
+          this.$store.state.bboxTool = false
         }
         this.svgElement.addEventListener('mousemove', drawRect)
         this.svgElement.addEventListener('mouseup', endDraw)
