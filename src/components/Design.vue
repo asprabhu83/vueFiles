@@ -54,8 +54,13 @@ export default {
     selectedImage () {
       return this.$store.state.selectedImage
     },
-    selectedDetail () {
-      return Object.values(this.details).find(detail => detail.image_Location === this.selectedImage)
+    selectedDetail: {
+      get: function () {
+        return Object.values(this.details).find(detail => detail.image_Location === this.selectedImage)
+      },
+      set: function (newValue) {
+        return newValue
+      }
     },
     selectedIndex () {
       return Object.values(this.details).findIndex(detail => detail.image_Location === this.selectedImage)

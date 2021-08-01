@@ -2,8 +2,9 @@
   <main class="h-screen w-screen bg-white flex flex-col">
     <NavBar />
     <section class="relative flex flex-1 flex-row">
-    <Layers v-if="$route.name !=='Editor'"/>
-     <Videos  v-if="$route.name==='Grid' || $route.name==='Editor' || $route.name==='Home'"/>
+    <Tools v-if="$route.name==='Editor'"/>
+    <Layers v-if="$route.name!=='Editor'"/>
+     <Videos  v-if="$route.name==='Grid' || $route.name==='Home'"/>
       <section
         class="w-full h-full relative z-10 scrollbar text-left text-none">
         <router-view/>
@@ -20,14 +21,16 @@ import Layers from '../components/Layers.vue'
 import Videos from '../components/Videos.vue'
 import NavBar from '../components/NavBar.vue'
 import Loading from '../components/Loading.vue'
+import Tools from '../components/Tools.vue'
 export default {
-  name: 'App',
+  name: 'Dashboard',
   components: {
     Design,
     NavBar,
     Layers,
     Loading,
-    Videos
+    Videos,
+    Tools
   },
   computed: {
     designComponent () {
