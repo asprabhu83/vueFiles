@@ -30,7 +30,25 @@
                 </a>
               </li>
               <li class="nav-item">
-                <router-link  class="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"  to="/create-user" >Add Users</router-link>
+                <div class="relative inline-block text-left">
+                  <div>
+                    <button type="button" @mouseover="drpdwn = true"  class="drpdwn outline-none border-none inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-transparent text-sm font-medium text-gray-700 " id="menu-button" aria-expanded="true" aria-haspopup="true">
+                      Options
+                      <!-- Heroicon name: solid/chevron-down -->
+                      <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                      </svg>
+                    </button>
+                  </div>
+                  <div v-if="drpdwn === true" @mouseleave="drpdwn = false" class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+                    <div class="py-1" role="none">
+                      <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
+                      <router-link to="/create-user" class="text-gray-700 block px-4 py-2 text-sm hover:text-red-700" role="menuitem" tabindex="-1" id="menu-item-0">Add Users</router-link>
+                      <router-link to="" class="text-gray-700 block px-4 py-2 text-sm hover:text-red-700" role="menuitem" tabindex="-1" id="menu-item-1">Manage Users</router-link>
+                      <router-link to="/user-role" class="text-gray-700 block px-4 py-2 text-sm hover:text-red-700" role="menuitem" tabindex="-1" id="menu-item-2">Add UserRole</router-link>
+                    </div>
+                  </div>
+                </div>
               </li>
             </ul>
           </div>
@@ -43,6 +61,11 @@
 
 <script>
 export default {
+  data () {
+    return {
+      drpdwn: false
+    }
+  },
   methods: {
     Logout () {
       this.axios.post(process.env.VUE_APP_API_URI_PREFIX + 'api/users/logout')
@@ -60,3 +83,10 @@ export default {
   }
 }
 </script>
+<style scoped>
+.drpdwn{
+  color: white;
+  padding-top: 6px;
+  text-transform: uppercase;
+}
+</style>

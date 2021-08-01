@@ -7,6 +7,7 @@ import Editor from '../views/Editor.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Login from '../views/Login.vue'
 import CreateUser from '../views/CreateUser.vue'
+import CreateUserRole from '../views/CreateUserRole.vue'
 
 const routes = [
   {
@@ -23,6 +24,11 @@ const routes = [
         path: '/',
         name: 'Project',
         component: Project
+      },
+      {
+        path: '/user-role',
+        name: 'CreateUserRole',
+        component: CreateUserRole
       },
       {
         path: '/create-user',

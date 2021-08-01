@@ -44,9 +44,9 @@
           <div class="mb-4">
             <label
               class="block text-gray-700 text-sm font-bold mb-2"
-              for="userrole"
+              for="phone"
             >
-              User Role
+              Phone
             </label>
             <input
               class="
@@ -62,11 +62,40 @@
                 focus:outline-none
                 focus:shadow-outline
               "
-              id="userrole"
-              type="text"
-              placeholder="User Role"
-              v-model="userRole"
+              id="phone"
+              type="number"
+              placeholder="Phone"
+              v-model="phone"
             />
+          </div>
+          <div class="mb-4">
+            <label
+              class="block text-gray-700 text-sm font-bold mb-2"
+              for="userrole"
+            >
+              User Role
+            </label>
+            <select
+              class="
+                shadow
+                appearance-none
+                border
+                rounded
+                w-full
+                py-2
+                px-3
+                text-gray-700
+                leading-tight
+                focus:outline-none
+                focus:shadow-outline
+              "
+              id="userrole"
+              v-model="userRole"
+            >
+             <option class="text-xl " value="">Choose User Role</option>
+             <option class="text-xl" value="admin">admin</option>
+             <option class="text-xl" value="anatator">anatator</option>
+            </select>
           </div>
           <div class="mb-4">
             <label
@@ -157,6 +186,7 @@ export default {
       password: '',
       userRole: '',
       name: '',
+      phone: '',
       success: false,
       empty_valid: false,
       email_valid: false
@@ -176,7 +206,8 @@ export default {
         this.email === '' ||
         this.password === '' ||
         this.userRole === '' ||
-        this.name === ''
+        this.name === '' ||
+        this.phone === ''
       ) {
         err++
         this.empty_valid = true
@@ -189,10 +220,11 @@ export default {
         }
       }
       if (err === 0) {
-        this.axios.post(process.env.VUE_APP_API_URI_PREFIX + '/api/users/register', {
+        this.axios.post(process.env.VUE_APP_API_URI_PREFIX + 'api/users/register', {
           email: this.email,
           password: this.password,
           user_role: this.userRole,
+          phone: this.phone,
           name: this.name,
           password_confirmation: this.password
         })
