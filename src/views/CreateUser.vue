@@ -197,7 +197,6 @@ export default {
           password_confirmation: this.password
         })
           .then((response) => {
-            console.log(response)
             this.success = true
             btn.innerHTML = 'Add User'
           })

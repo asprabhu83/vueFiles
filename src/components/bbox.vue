@@ -1,10 +1,11 @@
 <template>
-   <svg v-if="imgsize" :viewBox="'0 0 ' + imgsize.width + ' ' + imgsize.height" id="viewport">
+   <svg v-if="imgsize" :viewBox="'0 0 ' + imgsize.width + ' ' + imgsize.height" id="viewport" version="1.1" baseProfile="full">
       <image :xlink:href="src" width="100%" height="100%"/>
+      <g>
       <rect
         v-for="(bb, i) in bbs.boundingBoxes" :key="'bb' + i"
         :x="bb.x || '0'" :y="bb.y || '0'" :width="bb.w || '0'" :height="bb.h  || '0'"
-        fill="#EF5350" fill-opacity='0.4' :stroke="bbcolor || '#EF5350'" :stroke-width="bbstroke || '2'" vector-effect="non-scaling-stroke" shape-rendering="crispEdges" class="draggable" :class="'bb-' + i + ' ' + 'cursor-move'"/>
+        fill="#EF5350" fill-opacity='0.4' :stroke="bbcolor || '#EF5350'" :stroke-width="bbstroke || '2'" vector-effect="non-scaling-stroke" shape-rendering="crispEdges" class="draggable" :class="'bb-' + i + ' cursor-move' + ' resize'"/>
       <circle
         v-for="(bb, i) in bbs.boundingBoxes" :key="'bb' + i"
         :cx="bb.x + bb.w || '0'" :cy="bb.y || '0'" r=15
@@ -21,6 +22,7 @@
         v-for="(bb, i) in bbs.boundingBoxes" :key="'bb' + i"
         :cx="bb.x + bb.w || '0'" :cy="bb.y + bb.h || '0'" r=15
         fill="#EF5350" fill-opacity='0.4' :stroke="bbcolor || '#EF5350'" :stroke-width="bbstroke || '2'" vector-effect="non-scaling-stroke" shape-rendering="crispEdges" class="resize" :class="'bb-' + i"/>
+      </g>
     </svg>
 </template>
 <script>
@@ -49,10 +51,7 @@ export default {
         x: 0,
         y: 0,
         w: 0,
-        h: 0,
-        printCoordinates: function () {
-          console.log(`X: ${this.x}px, Y: ${this.y}px, Width: ${this.w}px, Height: ${this.h}px`)
-        }
+        h: 0
       }
     }
   },
@@ -86,7 +85,6 @@ export default {
       var pt = this.svgElement.createSVGPoint()
       if (event.target.classList.contains('draggable')) {
         var objectPosition = event.target.classList[1].toString().substring(3)
-        console.log(event.target)
         var cursorPoint = (e) => {
           pt.x = e.clientX
           pt.y = e.clientY
@@ -117,24 +115,34 @@ export default {
         this.svgElement.addEventListener('mouseleave', endDrag)
       } else if (event.target.classList.contains('resize')) {
         objectPosition = event.target.classList[1].toString().substring(3)
-        console.log(event)
         this.draggingElement = event.target
-        const pointIn = (n, e) => {
-          console.log(pt)
-          pt.x = e.target.cx.animVal.value
-          pt.y = e.target.cy.animVal.value
-          return pt.matrixTransform(n.getTransformToElement(this.svgElement).inverse())
-        }
+        const start = this.svgPoint(this.svgElement, event.clientX, event.clientY)
         const resize = (evt) => {
+          const p = this.svgPoint(this.svgElement, evt.clientX, evt.clientY)
           if (this.draggingElement) {
-            var parentNode = event.target.parentNode.children
-            parentNode.forEach(node => {
-              if (node.classList[1] === event.target.classList[1] && node.classList.contains('draggable')) {
-                var p = pointIn(node, event)
-                this.bbs.boundingBoxes[objectPosition].w = Math.max(p.x - node.x.animVal.value, 1)
-                this.bbs.boundingBoxes[objectPosition].h = Math.max(p.y - node.y.animVal.value, 1)
+            var startWidth = this.bbs.boundingBoxes[objectPosition].w
+            var startHeight = this.bbs.boundingBoxes[objectPosition].h
+            if (start.x === this.bbs.boundingBoxes[objectPosition].x) {
+              if (evt.clientX < event.clientX) {
+                this.bbs.boundingBoxes[objectPosition].x = p.x
+                this.bbs.boundingBoxes[objectPosition].y = p.y
+                this.bbs.boundingBoxes[objectPosition].w = startWidth - 1
+                this.bbs.boundingBoxes[objectPosition].h = startHeight - 1
+              } else {
+                this.bbs.boundingBoxes[objectPosition].x = p.x
+                this.bbs.boundingBoxes[objectPosition].y = p.y
+                this.bbs.boundingBoxes[objectPosition].w = startWidth + 1
+                this.bbs.boundingBoxes[objectPosition].h = startHeight + 1
               }
-            })
+            } else {
+              if (evt.clientX < event.clientX) {
+                this.bbs.boundingBoxes[objectPosition].w = startWidth - 1
+                this.bbs.boundingBoxes[objectPosition].h = startHeight - 1
+              } else {
+                this.bbs.boundingBoxes[objectPosition].w = startWidth + 1
+                this.bbs.boundingBoxes[objectPosition].h = startHeight + 1
+              }
+            }
           }
         }
         const endresize = (evt) => {
