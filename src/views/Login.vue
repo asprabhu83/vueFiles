@@ -167,7 +167,6 @@ export default {
   }
 }
 </script>
-
 <style scoped>
 form {
   box-shadow: 0 2px 10px 4px rgb(0 0 0/15%);
