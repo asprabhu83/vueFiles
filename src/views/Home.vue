@@ -69,6 +69,9 @@ export default {
       })
         .then(x => {
           this.$store.state.projects = x.data
+          this.$store.state.selectedProject = x.data.filter(el => {
+            return el.id === lastinsertid
+          })
           this.$router.push('/project')
           this.$store.state.loading = false
         })
