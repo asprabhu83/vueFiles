@@ -52,16 +52,16 @@ export default {
     async onFileUpload (ev) {
       var videoForm = this.$refs.videoForm
       var formData = new FormData(videoForm)
-      var galArray = []
       this.$store.state.loading = true
+      var lastinsertid
       await this.axios.post(this.appURI + 'api/upload', formData)
         // get data
         .then(x => {
-          x.data.files.forEach(gallery => {
-            galArray.push(this.appURI + 'uploads/' + gallery)
-          })
+          lastinsertid = x.data.last_insert_id
         })
-      this.$store.commit('GET_GALLERIES', { galArray: galArray })
+      await this.axios.post(this.appURI + 'api/create-thumbs', {
+        video_id: lastinsertid
+      })
       await this.axios.get(this.appURI + 'api/getVideos', {
         params: {
           project_id: this.projectId
