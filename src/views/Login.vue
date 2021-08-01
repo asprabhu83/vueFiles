@@ -139,6 +139,12 @@ export default {
         password: this.password
       })
         .then((response) => {
+          var permission = response.data.permission_id[0].permission_id
+          var perm = JSON.parse(permission)
+          console.log(perm)
+          for (var i = 0; i < perm.length; i++) {
+            localStorage.setItem('permission_' + perm[i], perm[i])
+          }
           const token = response.data.token
           const id = response.data.user.id
           const name = response.data.user.name
@@ -161,7 +167,6 @@ export default {
   }
 }
 </script>
-
 <style scoped>
 form {
   box-shadow: 0 2px 10px 4px rgb(0 0 0/15%);

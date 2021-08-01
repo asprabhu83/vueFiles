@@ -43,7 +43,6 @@ export default {
       immediate: true,
       deep: true,
       handler (newValue, oldValue) {
-        console.log(newValue, oldValue)
         this.selectedDetail = newValue
       }
     }
