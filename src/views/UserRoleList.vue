@@ -154,7 +154,7 @@
                       font-medium
                     "
                   >
-                    <span class="text-green-600 cursor-pointer mr-4 "
+                    <span class="text-green-600 cursor-pointer mr-4 " @click="Edit(userRole.id)"
                       >Edit</span
                     >
                     <span class="text-red-600 cursor-pointer" @click="DialogBox(userRole.id)"
@@ -191,6 +191,114 @@
         </div>
       </div>
      </div>
+     <div class="dialog_box fixed inset-0 h-screen w-full flex justify-center items-center" v-if="editDialog === true">
+      <div class="dialog_content bg-white rounded-md shadow-md">
+         <form class="bg-white rounded px-10 pb-14" >
+            <div class="form_box">
+              <div class="err_box h-12">
+                <div class="success py-3 text-green-500" v-if="success == true">
+                  Added Successfully
+                </div>
+                <div class="error py-3 text-red-500" v-if="empty_valid == true">
+                  Values should not be empty
+                </div>
+              </div>
+              <div class="mb-4">
+                <label
+                  class="block text-gray-700 text-sm font-bold mb-2"
+                  for="userrole"
+                >
+                  User Role
+                </label>
+                <input
+                  class="
+                    shadow
+                    appearance-none
+                    border
+                    rounded
+                    w-full
+                    py-2
+                    px-3
+                    text-gray-700
+                    leading-tight
+                    focus:outline-none
+                    focus:shadow-outline
+                  "
+                  id="userrole"
+                  type="text"
+                  placeholder="User Role"
+                  v-model="userRole"
+                />
+              </div>
+              <div class="mb-4">
+                <label
+                  class="block text-gray-700 text-sm font-bold mb-2"
+                  for="description"
+                >
+                  Description
+                </label>
+                <input
+                  class="
+                    shadow
+                    appearance-none
+                    border
+                    rounded
+                    w-full
+                    py-2
+                    px-3
+                    text-gray-700
+                    leading-tight
+                    focus:outline-none
+                    focus:shadow-outline
+                  "
+                  id="description"
+                  type="text"
+                  placeholder="Description"
+                  v-model="description"
+                />
+              </div>
+              <div class="mb-12">
+                <label
+                  class="block text-gray-700 text-sm font-bold mb-3"
+                  for=""
+                >
+                  Select User Permissions
+                </label>
+                <div class="mt-2 ml-2 grid grid-cols-3 gap-4" v-for="permName in permNames" :key="permName.id">
+                <div>
+                  <label class="inline-flex items-center cursor-pointer"  >
+                    <input type="checkbox" class="form-checkbox" :value="permName.permission_name" v-model="permissions" >
+                    <span class="ml-2 capitalize" >{{permName.permission_name}}</span>
+                  </label>
+                </div>
+              </div>
+
+              </div>
+              <div class="flex items-center justify-between">
+                <button
+                  class="
+                    bg-blue-500
+                    hover:bg-blue-700
+                    text-white
+                    font-bold
+                    w-full
+                    py-2
+                    px-4
+                    rounded
+                    focus:outline-none
+                    focus:shadow-outline
+                    reg_btn
+                  "
+                  type="button"
+                  @click="AddUserRole"
+                >
+                  Update UserRole
+                </button>
+              </div>
+            </div>
+          </form>
+      </div>
+     </div>
   </div>
 </template>
 
@@ -199,11 +307,18 @@ export default {
   data () {
     return {
       userRoles: [],
-      deleteDialog: false
+      permNames: [],
+      deleteDialog: false,
+      editDialog: false,
+      id: '',
+      userRole: '',
+      description: '',
+      permissions: []
     }
   },
   mounted () {
     this.GetUserRoles()
+    this.GetPermission()
   },
   methods: {
     GetUserRoles () {
@@ -227,6 +342,29 @@ export default {
         .then(() => {
           this.deleteDialog = false
           this.GetUserRoles()
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    GetPermission () {
+      this.axios.get(process.env.VUE_APP_API_URI_PREFIX + 'api/permission/index')
+        .then((response) => {
+          this.permNames = response.data
+        }).catch((error) => {
+          console.log(error)
+        })
+    },
+    Edit (id) {
+      this.editDialog = true
+      this.axios
+        .get(process.env.VUE_APP_API_URI_PREFIX + 'api/userrole/show/' + id)
+        .then((response) => {
+          this.id = response.data.id
+          this.userRole = response.data.user_role
+          this.description = response.data.description
+          this.permissions = JSON.parse(response.data.permission_id)
+          this.phone = response.data.phone
         })
         .catch((error) => {
           console.log(error)

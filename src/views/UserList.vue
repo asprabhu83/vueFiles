@@ -362,7 +362,7 @@
                     type="button"
                     @click="Update"
                     >
-                    Add User
+                    Update User
                     </button>
                 </div>
                 </div>
