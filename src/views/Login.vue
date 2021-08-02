@@ -3,7 +3,7 @@
     <div
       class="w-full h-screen flex items-center justify-center login_full_scrn bg-gray-900"
     >
-      <form
+      <form @submit.prevent="Login"
         class="
           bg-white
           w-6/12
@@ -92,8 +92,7 @@
                 focus:shadow-outline
                 login_btn
               "
-              type="button"
-              @click="Login"
+              type="submit"
             >
               Sign In
             </button>

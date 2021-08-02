@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="w-2/5 mt-40 mx-auto login_full_scrn">
-      <form class="bg-white rounded mb-4">
+      <form class="bg-white rounded mb-4" >
         <div class="form_box">
           <div class="err_box h-12">
             <div class="success py-3 text-green-500" v-if="success == true">
@@ -117,6 +117,7 @@ export default {
       description: '',
       permissions: [],
       empty_valid: false,
+      success: false,
       permNames: []
     }
   },
@@ -125,25 +126,32 @@ export default {
   },
   methods: {
     AddUserRole () {
-      // if (
-      //   this.userRole === '' ||
-      //   this.description === '' ||
-      //   this.permissions === ''
-      // ) {
-      //   this.empty_valid = true
-      // }
+      this.empty_valid = false
+      this.success = false
+      var err = 0
+      if (
+        this.userRole === '' ||
+        this.description === '' ||
+        this.permissions === ''
+      ) {
+        this.empty_valid = true
+        err++
+      }
 
       this.permissions = JSON.stringify(this.permissions)
 
-      this.axios.post(process.env.VUE_APP_API_URI_PREFIX + 'api/userrole/store', {
-        user_role: this.userRole,
-        description: this.description,
-        permission_id: this.permissions
-      }).then((response) => {
-        console.log(response)
-      }).catch((error) => {
-        console.log(error)
-      })
+      if (err === 0) {
+        this.axios.post(process.env.VUE_APP_API_URI_PREFIX + 'api/userrole/store', {
+          user_role: this.userRole,
+          description: this.description,
+          permission_id: this.permissions
+        }).then(() => {
+          this.success = true
+          this.$router.push('/user-role-list')
+        }).catch((error) => {
+          console.log(error)
+        })
+      }
     },
     GetPermission () {
       this.axios.get(process.env.VUE_APP_API_URI_PREFIX + 'api/permission/index')

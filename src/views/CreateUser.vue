@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="w-2/5 mt-40 mx-auto login_full_scrn">
-      <form class="bg-white rounded mb-4">
+      <form class="bg-white rounded mb-4" @submit.prevent="AddUser">
         <div class="form_box">
           <div class="err_box h-12">
             <div class="success py-3 text-green-500" v-if="success == true">
@@ -119,7 +119,7 @@
                 focus:shadow-outline
               "
               id="username"
-              type="email"
+              type="text"
               placeholder="Email"
               v-model="email"
             />
@@ -166,8 +166,7 @@
                 focus:shadow-outline
                 reg_btn
               "
-              type="button"
-              @click="AddUser"
+              type="submit"
             >
               Add User
             </button>
@@ -231,6 +230,7 @@ export default {
           .then((response) => {
             this.success = true
             btn.innerHTML = 'Add User'
+            this.$router.push('/user-list')
           })
           .catch((error) => {
             console.log(error)

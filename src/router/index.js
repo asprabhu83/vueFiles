@@ -8,6 +8,8 @@ import Dashboard from '../views/Dashboard.vue'
 import Login from '../views/Login.vue'
 import CreateUser from '../views/CreateUser.vue'
 import CreateUserRole from '../views/CreateUserRole.vue'
+import UsersList from '../views/UserList.vue'
+import UserRoleList from '../views/UserRoleList.vue'
 
 const routes = [
   {
@@ -24,6 +26,16 @@ const routes = [
         path: '/',
         name: 'Project',
         component: Project
+      },
+      {
+        path: '/user-list',
+        name: 'UsersList',
+        component: UsersList
+      },
+      {
+        path: '/user-role-list',
+        name: 'UserRoleList',
+        component: UserRoleList
       },
       {
         path: '/user-role',
