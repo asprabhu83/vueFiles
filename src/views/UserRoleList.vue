@@ -154,12 +154,8 @@
                       font-medium
                     "
                   >
-                    <span class="text-green-600 cursor-pointer mr-4 " @click="Edit(userRole.id)"
-                      >Edit</span
-                    >
-                    <span class="text-red-600 cursor-pointer" @click="DialogBox(userRole.id)"
-                      >Delete</span
-                    >
+                    <font-awesome-icon icon="edit"  size="1x" class="text-green-600 mr-4 cursor-pointer" @click="Edit(userRole.id)" />
+                    <font-awesome-icon icon="trash"  size="1x" class="text-red-600 cursor-pointer" @click="DialogBox(userRole.id)" />
                   </td>
                 </tr>
 
@@ -193,9 +189,10 @@
      </div>
      <div class="dialog_box fixed inset-0 h-screen w-full flex justify-center items-center" v-if="editDialog === true">
       <div class="dialog_content bg-white rounded-md shadow-md">
+         <div class="my-2   flex items-center justify-between py-3 px-10"><span class="font-bold text-lg" >Edit UserRole</span><font-awesome-icon icon="times"  size="1x" class="text-red-600 cursor-pointer" @click="editDialog = false" /></div>
          <form class="bg-white rounded px-10 pb-14" >
             <div class="form_box">
-              <div class="err_box h-12">
+              <div class="err_box ">
                 <div class="success py-3 text-green-500" v-if="success == true">
                   Added Successfully
                 </div>
@@ -290,7 +287,7 @@
                     reg_btn
                   "
                   type="button"
-                  @click="AddUserRole"
+                  @click="Update"
                 >
                   Update UserRole
                 </button>
@@ -313,7 +310,9 @@ export default {
       id: '',
       userRole: '',
       description: '',
-      permissions: []
+      permissions: [],
+      empty_valid: false,
+      success: false
     }
   },
   mounted () {
@@ -364,11 +363,40 @@ export default {
           this.userRole = response.data.user_role
           this.description = response.data.description
           this.permissions = JSON.parse(response.data.permission_id)
-          this.phone = response.data.phone
         })
         .catch((error) => {
           console.log(error)
         })
+    },
+    Update () {
+      this.empty_valid = false
+      this.success = false
+      var err = 0
+      if (
+        this.userRole === '' ||
+        this.description === '' ||
+        !this.permissions.length
+      ) {
+        this.empty_valid = true
+        err++
+      }
+      if (err === 0) {
+        this.permissions = JSON.stringify(this.permissions)
+        this.axios
+          .put(process.env.VUE_APP_API_URI_PREFIX + 'api/userrole/update/' + this.id, {
+            id: this.id,
+            user_role: this.userRole,
+            description: this.description,
+            permission_id: this.permissions
+          })
+          .then(() => {
+            this.editDialog = false
+            this.GetUserRoles()
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      }
     }
   }
 }

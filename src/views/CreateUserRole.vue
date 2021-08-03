@@ -132,15 +132,14 @@ export default {
       if (
         this.userRole === '' ||
         this.description === '' ||
-        this.permissions === ''
+        !this.permissions.length
       ) {
         this.empty_valid = true
         err++
       }
 
-      this.permissions = JSON.stringify(this.permissions)
-
       if (err === 0) {
+        this.permissions = JSON.stringify(this.permissions)
         this.axios.post(process.env.VUE_APP_API_URI_PREFIX + 'api/userrole/store', {
           user_role: this.userRole,
           description: this.description,

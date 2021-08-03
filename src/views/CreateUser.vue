@@ -93,8 +93,8 @@
               v-model="userRole"
             >
              <option class="text-xl " value="">Choose User Role</option>
-             <option class="text-xl" value="admin">admin</option>
-             <option class="text-xl" value="anatator">anatator</option>
+             <option class="text-xl" :value="userRoleName.user_role" v-for="userRoleName in userRoleNames"
+              :key="userRoleName.id" >{{userRoleName.user_role}}</option>
             </select>
           </div>
           <div class="mb-4">
@@ -188,8 +188,12 @@ export default {
       phone: '',
       success: false,
       empty_valid: false,
-      email_valid: false
+      email_valid: false,
+      userRoleNames: []
     }
+  },
+  mounted () {
+    this.GetUserRoleName()
   },
   methods: {
     AddUser () {
@@ -237,6 +241,14 @@ export default {
             btn.innerHTML = 'Add User'
           })
       }
+    },
+    GetUserRoleName () {
+      this.axios.get(process.env.VUE_APP_API_URI_PREFIX + 'api/userrole/index')
+        .then((response) => {
+          this.userRoleNames = response.data
+        }).catch((error) => {
+          console.log(error)
+        })
     }
   }
 }

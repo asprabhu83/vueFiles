@@ -181,12 +181,8 @@
                       font-medium
                     "
                   >
-                    <span class="text-green-600 cursor-pointer mr-4" @click="Edit(user.id)">Edit</span>
-                    <span
-                      class="text-red-600 cursor-pointer"
-                      @click="DialogBox(user.id)"
-                      >Delete</span
-                    >
+                    <font-awesome-icon icon="edit"  size="1x" class="text-green-600 mr-4 cursor-pointer" @click="Edit(user.id)" />
+                    <font-awesome-icon icon="trash"  size="1x" class="text-red-600 cursor-pointer" @click="DialogBox(user.id)" />
                   </td>
                 </tr>
 
@@ -220,10 +216,10 @@
     </div>
     <div class="dialog_box fixed inset-0 h-screen w-full flex justify-center items-center" v-if="editDialog === true">
         <div class="dialog_content bg-white rounded-md shadow-md">
-            <div class="my-2  text-red-600 text-right py-3 px-10"><font-awesome-icon icon="times"  size="1x" class="cursor-pointer" @click="editDialog = false" /></div>
+            <div class="my-2   flex items-center justify-between py-3 px-10"><span class="font-bold text-lg" >Edit User</span><font-awesome-icon icon="times"  size="1x" class="text-red-600 cursor-pointer" @click="editDialog = false" /></div>
             <form class="bg-white rounded px-10 pb-14" >
                 <div class="form_box">
-                <div class="err_box h-12">
+                <div class="err_box ">
                     <div class="success py-3 text-green-500" v-if="success == true">
                     Added Successfully
                     </div>
@@ -313,8 +309,7 @@
                     v-model="userRole"
                     >
                     <option class="text-xl " value="">Choose User Role</option>
-                    <option class="text-xl" value="admin">admin</option>
-                    <option class="text-xl" value="anatator">anatator</option>
+                    <option class="text-xl" v-for="userRoleName in userRoleNames" :key="userRoleName.id" :value="userRoleName.user_role">{{userRoleName.user_role}}</option>
                     </select>
                 </div>
                 <div class="mb-12">
@@ -383,11 +378,16 @@ export default {
       email: '',
       name: '',
       userRole: '',
-      phone: ''
+      phone: '',
+      userRoleNames: [],
+      success: false,
+      empty_valid: false,
+      email_valid: false
     }
   },
   mounted () {
     this.GetUser()
+    this.GetUserRoleName()
   },
   methods: {
     GetUser () {
@@ -432,19 +432,49 @@ export default {
         })
     },
     Update () {
-      this.axios
-        .put(process.env.VUE_APP_API_URI_PREFIX + 'api/users/update/' + this.id, {
-          id: this.id,
-          name: this.name,
-          user_role: this.userRole,
-          phone: this.phone,
-          email: this.email
-        })
-        .then(() => {
-          this.editDialog = false
-          this.GetUser()
-        })
-        .catch((error) => {
+      this.success = false
+      this.empty_valid = false
+      this.email_valid = false
+      var err = 0
+      var emailRegex =
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      if (
+        this.email === '' ||
+        this.userRole === '' ||
+        this.name === '' ||
+        this.phone === ''
+      ) {
+        err++
+        this.empty_valid = true
+      } else {
+        if (!emailRegex.test(this.email)) {
+          err++
+          this.email_valid = true
+        }
+      }
+      if (err === 0) {
+        this.axios
+          .put(process.env.VUE_APP_API_URI_PREFIX + 'api/users/update/' + this.id, {
+            id: this.id,
+            name: this.name,
+            user_role: this.userRole,
+            phone: this.phone,
+            email: this.email
+          })
+          .then(() => {
+            this.editDialog = false
+            this.GetUser()
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      }
+    },
+    GetUserRoleName () {
+      this.axios.get(process.env.VUE_APP_API_URI_PREFIX + 'api/userrole/index')
+        .then((response) => {
+          this.userRoleNames = response.data
+        }).catch((error) => {
           console.log(error)
         })
     }
