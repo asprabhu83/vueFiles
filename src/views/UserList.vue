@@ -181,8 +181,8 @@
                       font-medium
                     "
                   >
-                    <font-awesome-icon icon="edit"  size="1x" class="text-green-600 mr-4 cursor-pointer" @click="Edit(user.id)" />
-                    <font-awesome-icon icon="trash"  size="1x" class="text-red-600 cursor-pointer" @click="DialogBox(user.id)" />
+                    <font-awesome-icon icon="edit"  size="1x" class="text-green-600 mr-4 cursor-pointer mt-1" @click="Edit(user.id)" />
+                    <font-awesome-icon icon="trash"  size="1x" class="text-red-600 cursor-pointer mt-1" @click="DialogBox(user.id)" />
                   </td>
                 </tr>
 
