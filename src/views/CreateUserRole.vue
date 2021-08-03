@@ -72,8 +72,8 @@
             >
               Select User Permissions
             </label>
-            <div class="mt-2 ml-2 grid grid-cols-3 gap-4" v-for="permName in permNames" :key="permName.id">
-            <div>
+            <div class="mt-2 ml-2 grid grid-cols-3 gap-4" >
+            <div v-for="permName in permNames" :key="permName.id">
               <label class="inline-flex items-center cursor-pointer"  >
                 <input type="checkbox" class="form-checkbox" :value="permName.permission_name" v-model="permissions" >
                 <span class="ml-2 capitalize" >{{permName.permission_name}}</span>

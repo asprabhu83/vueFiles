@@ -101,8 +101,8 @@
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
-                <tr v-for="user in users" :key="user.id">
-                  <td class="px-6 py-4 whitespace-nowrap">
+                <tr v-for="user in users" :key="user.id" >
+                  <td class="px-6 py-4 whitespace-nowrap" v-if="user.id !== 1">
                     <span
                       class="
                         inline-flex
@@ -115,7 +115,7 @@
                       {{ user.id }}
                     </span>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap">
+                  <td class="px-6 py-4 whitespace-nowrap" v-if="user.id !== 1">
                     <span
                       class="
                         inline-flex
@@ -129,7 +129,7 @@
                     </span>
                   </td>
 
-                  <td class="px-6 py-4 whitespace-nowrap">
+                  <td class="px-6 py-4 whitespace-nowrap" v-if="user.id !== 1">
                     <span
                       class="
                         inline-flex
@@ -143,7 +143,7 @@
                     </span>
                   </td>
 
-                  <td class="px-6 py-4 whitespace-nowrap">
+                  <td class="px-6 py-4 whitespace-nowrap" v-if="user.id !== 1">
                     <span
                       class="
                         inline-flex
@@ -156,7 +156,7 @@
                       {{ user.email }}
                     </span>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap">
+                  <td class="px-6 py-4 whitespace-nowrap" v-if="user.id !== 1">
                     <span
                       class="
                         inline-flex
@@ -169,7 +169,7 @@
                       {{ user.phone }}
                     </span>
                   </td>
-                  <td v-if="user.user_role !== 'super admin'"
+                  <td v-if="user.id !== 1"
                     class="
                       px-6
                       py-4
