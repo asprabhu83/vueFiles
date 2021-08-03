@@ -15,6 +15,7 @@ export default createStore({
     designComponent: 0,
     bboxTool: false,
     bboxComponent: 0,
+    currentSlide: 0,
     appURI: process.env.NODE_ENV === 'development' ? process.env.VUE_APP_API_URI_PREFIX : process.env.VUE_APP_API_URI_PREFIX
   },
   mutations: {

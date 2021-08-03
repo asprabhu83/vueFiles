@@ -1,7 +1,7 @@
 <template>
   <aside
     id="right-panel"
-    class="relative bg-dark-100 border-l border-gray-600 h-full w-64 flex flex-col overflow-hidden flex-shrink-0"
+    class="relative h-full w-3/12 flex flex-col overflow-hidden flex-shrink-0 bg-gray-800"
   >
   <template v-if="selectedDetail && selectedDetail.boundingBoxes && selectedDetail.boundingBoxes.length > 0">
   <section  class="mx-5 w-full h-auto relative z-10 scrollbar text-none overflow-auto" v-for="(boundingBox, boundingKey) in selectedDetail.boundingBoxes" v-bind:key="boundingKey">

@@ -1,12 +1,13 @@
 <template>
   <main class="h-screen w-screen bg-white flex flex-col">
-    <NavBar />
+    <NavBar  v-if="$route.name!=='Editor'"/>
+    <Topbar  v-if="$route.name==='Editor'"/>
     <section class="relative flex flex-1 flex-row">
     <Tools v-if="$route.name==='Editor'"/>
     <Layers v-if="$route.name!=='Editor'"/>
      <Videos  v-if="$route.name==='Grid' || $route.name==='Home'"/>
       <section
-        class="w-full h-full relative z-10 scrollbar text-left text-none">
+        class="relative flex flex-1 flex-col overflow-hidden flex-shrink-0 ">
         <router-view/>
         </section>
       <Design :key="designComponent"/>
@@ -22,6 +23,7 @@ import Videos from '../components/Videos.vue'
 import NavBar from '../components/NavBar.vue'
 import Loading from '../components/Loading.vue'
 import Tools from '../components/Tools.vue'
+import Topbar from '../components/Topbar.vue'
 export default {
   name: 'Dashboard',
   components: {
@@ -30,7 +32,8 @@ export default {
     Layers,
     Loading,
     Videos,
-    Tools
+    Tools,
+    Topbar
   },
   computed: {
     designComponent () {
