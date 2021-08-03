@@ -1,5 +1,15 @@
 <template>
-  <div class="w-10/12 mx-auto mt-40">
+<div>
+  <div class="dialog_box fixed inset-0 h-screen w-full flex justify-center items-center" v-if="addUserDialog === true">
+      <div class="dialog_content bg-white rounded-md shadow-md">
+         <div class="my-2   flex items-center justify-between py-3 px-6"><span class="font-bold text-lg" >Add User Role</span><font-awesome-icon icon="times"  size="1x" class="text-red-600 cursor-pointer" @click="addUserDialog = false" /></div>
+         <AddUserRole @created="GetUserRoles" @childDialog="childDialog"/>
+      </div>
+   </div>
+   <div class="w-10/12 mx-auto text-right mt-10">
+     <button @click="addUserDialog = true" class=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 ml-5 px-4 rounded focus:outline-none focus:shadow-outline">Add User Role<font-awesome-icon icon="user-plus"  size="1x" class="text-white ml-2 cursor-pointer"  /></button>
+   </div>
+  <div class="w-10/12 mx-auto mt-10">
     <div class="flex flex-col">
       <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -261,8 +271,8 @@
                 >
                   Select User Permissions
                 </label>
-                <div class="mt-2 ml-2 grid grid-cols-3 gap-4" v-for="permName in permNames" :key="permName.id">
-                <div>
+                <div class="mt-2 ml-2 grid grid-cols-3 gap-4" >
+                <div v-for="permName in permNames" :key="permName.id">
                   <label class="inline-flex items-center cursor-pointer"  >
                     <input type="checkbox" class="form-checkbox" :value="permName.permission_name" v-model="permissions" >
                     <span class="ml-2 capitalize" >{{permName.permission_name}}</span>
@@ -297,16 +307,22 @@
       </div>
      </div>
   </div>
+</div>
 </template>
 
 <script>
+import AddUserRole from '../views/CreateUserRole.vue'
 export default {
+  components: {
+    AddUserRole
+  },
   data () {
     return {
       userRoles: [],
       permNames: [],
       deleteDialog: false,
       editDialog: false,
+      addUserDialog: false,
       id: '',
       userRole: '',
       description: '',
@@ -353,6 +369,9 @@ export default {
         }).catch((error) => {
           console.log(error)
         })
+    },
+    childDialog () {
+      this.addUserDialog = false
     },
     Edit (id) {
       this.editDialog = true

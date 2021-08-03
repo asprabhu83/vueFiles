@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="w-2/5 mt-40 mx-auto login_full_scrn">
+    <div class=" pb-5 pt-0 px-7 mx-auto login_full_scrn">
       <form class="bg-white rounded mb-4" @submit.prevent="AddUser">
         <div class="form_box">
-          <div class="err_box h-12">
+          <div class="err_box ">
             <div class="success py-3 text-green-500" v-if="success == true">
               Added Successfully
             </div>
@@ -234,7 +234,8 @@ export default {
           .then((response) => {
             this.success = true
             btn.innerHTML = 'Add User'
-            this.$router.push('/user-list')
+            this.$emit('created')
+            this.$emit('childDialog')
           })
           .catch((error) => {
             console.log(error)

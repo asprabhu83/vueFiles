@@ -6,7 +6,8 @@
       <form @submit.prevent="Login"
         class="
           bg-white
-          w-6/12
+          xl:w-8/12
+          2xl:w-6/12
           flex
           items-center
           justify-center

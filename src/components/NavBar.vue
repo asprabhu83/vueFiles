@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-wrap">
     <div class="w-full">
-      <nav class="relative flex flex-wrap items-center justify-between px-2 py-3 bg-gray-900">
+      <nav class="relative flex flex-wrap items-center justify-between px-2 py-3 bg-dark-100">
         <div class="container flex flex-wrap items-center justify-between">
           <div class="w-full relative flex justify-between lg:w-auto px-4 lg:static lg:block lg:justify-start">
               <a
@@ -36,12 +36,10 @@
                     </button>
                   </div>
                   <div v-if="drpdwn === true" @mouseleave="drpdwn = false" class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
-                    <div class="py-1" role="none">
+                    <div class="" role="none">
                       <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
-                      <router-link to="/create-user" class="text-gray-700 block px-4 py-2 text-sm hover:text-red-700 dropdown_menu_item" role="menuitem" tabindex="-1" id="menu-item-0">Add Users</router-link>
-                      <router-link to="/user-role" class="text-gray-700 block px-4 py-2 text-sm hover:text-red-700 dropdown_menu_item" role="menuitem" tabindex="-1" id="menu-item-2">Add UserRole</router-link>
-                      <router-link to="/user-list" class="text-gray-700 block px-4 py-2 text-sm hover:text-red-700 dropdown_menu_item" role="menuitem" tabindex="-1" id="menu-item-1">Manage Users</router-link>
-                      <router-link to="/user-role-list" class="text-gray-700 block px-4 py-2 text-sm hover:text-red-700 dropdown_menu_item" role="menuitem" tabindex="-1" id="menu-item-2">Manage UserRole</router-link>
+                      <router-link to="/user-list" class="text-gray-700 block px-4 py-3 text-sm hover:bg-dark-200 hover:text-white dropdown_menu_item" role="menuitem" tabindex="-1" id="menu-item-1">Manage Users</router-link>
+                      <router-link to="/user-role-list" class="text-gray-700 block px-4 py-3 text-sm hover:bg-dark-200 hover:text-white dropdown_menu_item" role="menuitem" tabindex="-1" id="menu-item-2">Manage UserRole</router-link>
                     </div>
                   </div>
                 </div>
@@ -49,7 +47,7 @@
             </ul>
           </div>
         </div>
-        <button class="bg-transparent px-6 text-white font-bold cursor-pointer" @click="Logout">Logout</button>
+        <button class="bg-transparent px-6 text-white font-bold cursor-pointer" @click="Logout">Logout<font-awesome-icon icon="sign-out-alt"  size="1x" class="text-white ml-2 cursor-pointer" @click="addUserDialog = false" /></button>
       </nav>
     </div>
   </div>
@@ -85,10 +83,6 @@ export default {
   padding-top: 6px;
   font-size:13px;
   text-transform: uppercase;
-}
-
-.dropdown_menu_item.active{
-  color: red;
 }
 
 </style>
