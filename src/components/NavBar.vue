@@ -62,7 +62,12 @@ export default {
   },
   methods: {
     Logout () {
-      this.axios.post(process.env.VUE_APP_API_URI_PREFIX + 'api/users/logout')
+      var token = localStorage.getItem('user_token')
+      this.axios.get(process.env.VUE_APP_API_URI_PREFIX + 'api/users/logout', {
+        headers: {
+          Authorization: 'Bearer ' + token
+        }
+      })
         .then(() => {
           localStorage.removeItem('user_token')
           localStorage.removeItem('id')

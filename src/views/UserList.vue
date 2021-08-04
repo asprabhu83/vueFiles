@@ -9,7 +9,10 @@
    <div class="w-10/12 mx-auto text-right mt-10">
      <button @click="addUserDialog = true" class=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 ml-5 px-4 rounded focus:outline-none focus:shadow-outline">Add User <font-awesome-icon icon="user-plus"  size="1x" class="text-white ml-2 cursor-pointer"  /></button>
    </div>
-  <div class="w-10/12 mx-auto mt-10">
+   <div class="w-10/12 mx-auto mt-10">
+     <input class="shadow appearance-none border rounded w-1/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" v-model="searchQuery" placeholder="Search" />
+   </div>
+  <div class="w-10/12 mx-auto mt-5">
     <div class="flex flex-col">
       <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -111,8 +114,8 @@
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
-                <tr v-for="user in users" :key="user.id" >
-                  <td class="px-6 py-4 whitespace-nowrap" v-if="user.id !== 1">
+                <tr v-for="item in resultQuery" :key="item.id" >
+                  <td class="px-6 py-4 whitespace-nowrap" v-if="item.id !== 1">
                     <span
                       class="
                         inline-flex
@@ -122,10 +125,10 @@
                         text-green-800
                       "
                     >
-                      {{ user.id }}
+                      {{ item.id }}
                     </span>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap" v-if="user.id !== 1">
+                  <td class="px-6 py-4 whitespace-nowrap" v-if="item.id !== 1">
                     <span
                       class="
                         inline-flex
@@ -135,25 +138,11 @@
                         text-green-800
                       "
                     >
-                      {{ user.name }}
-                    </span>
-                  </td>
-
-                  <td class="px-6 py-4 whitespace-nowrap" v-if="user.id !== 1">
-                    <span
-                      class="
-                        inline-flex
-                        text-xs
-                        leading-5
-                        font-semibold
-                        text-green-800
-                      "
-                    >
-                      {{ user.user_role }}
+                      {{ item.name }}
                     </span>
                   </td>
 
-                  <td class="px-6 py-4 whitespace-nowrap" v-if="user.id !== 1">
+                  <td class="px-6 py-4 whitespace-nowrap" v-if="item.id !== 1">
                     <span
                       class="
                         inline-flex
@@ -163,10 +152,11 @@
                         text-green-800
                       "
                     >
-                      {{ user.email }}
+                      {{ item.user_role }}
                     </span>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap" v-if="user.id !== 1">
+
+                  <td class="px-6 py-4 whitespace-nowrap" v-if="item.id !== 1">
                     <span
                       class="
                         inline-flex
@@ -176,10 +166,23 @@
                         text-green-800
                       "
                     >
-                      {{ user.phone }}
+                      {{ item.email }}
                     </span>
                   </td>
-                  <td v-if="user.id !== 1"
+                  <td class="px-6 py-4 whitespace-nowrap" v-if="item.id !== 1">
+                    <span
+                      class="
+                        inline-flex
+                        text-xs
+                        leading-5
+                        font-semibold
+                        text-green-800
+                      "
+                    >
+                      {{ item.phone }}
+                    </span>
+                  </td>
+                  <td v-if="item.id !== 1"
                     class="
                       px-6
                       py-4
@@ -191,8 +194,8 @@
                       font-medium
                     "
                   >
-                    <font-awesome-icon icon="edit"  size="1x" class="text-green-600 mr-4 cursor-pointer mt-1" @click="Edit(user.id)" />
-                    <font-awesome-icon icon="trash"  size="1x" class="text-red-600 cursor-pointer mt-1" @click="DialogBox(user.id)" />
+                    <font-awesome-icon icon="edit"  size="1x" class="text-green-600 mr-4 cursor-pointer mt-1" @click="Edit(item.id)" />
+                    <font-awesome-icon icon="trash"  size="1x" class="text-red-600 cursor-pointer mt-1" @click="DialogBox(item.id)" />
                   </td>
                 </tr>
 
@@ -227,7 +230,7 @@
     <div class="dialog_box fixed inset-0 h-screen w-full flex justify-center items-center" v-if="editDialog === true">
         <div class="dialog_content bg-white rounded-md shadow-md">
             <div class="my-2   flex items-center justify-between py-3 px-10"><span class="font-bold text-lg" >Edit User</span><font-awesome-icon icon="times"  size="1x" class="text-red-600 cursor-pointer" @click="editDialog = false" /></div>
-            <form class="bg-white rounded px-10 pb-14" >
+            <form class="bg-white rounded px-10 pb-10" >
                 <div class="form_box">
                 <div class="err_box ">
                     <div class="success py-3 text-green-500" v-if="success == true">
@@ -386,6 +389,7 @@ export default {
   },
   data () {
     return {
+      searchQuery: '',
       users: [],
       deleteDialog: false,
       editDialog: false,
@@ -404,6 +408,17 @@ export default {
   mounted () {
     this.GetUser()
     this.GetUserRoleName()
+  },
+  computed: {
+    resultQuery () {
+      if (this.searchQuery) {
+        return this.users.filter((item) => {
+          return this.searchQuery.toLowerCase().split(' ').every(v => item.name.toLowerCase().includes(v))
+        })
+      } else {
+        return this.users
+      }
+    }
   },
   methods: {
     GetUser () {

@@ -200,7 +200,7 @@
      <div class="dialog_box fixed inset-0 h-screen w-full flex justify-center items-center" v-if="editDialog === true">
       <div class="dialog_content bg-white rounded-md shadow-md">
          <div class="my-2   flex items-center justify-between py-3 px-10"><span class="font-bold text-lg" >Edit UserRole</span><font-awesome-icon icon="times"  size="1x" class="text-red-600 cursor-pointer" @click="editDialog = false" /></div>
-         <form class="bg-white rounded px-10 pb-14" >
+         <form class="bg-white rounded px-10 pb-10" >
             <div class="form_box">
               <div class="err_box ">
                 <div class="success py-3 text-green-500" v-if="success == true">
