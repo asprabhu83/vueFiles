@@ -1,4 +1,5 @@
 <template>
+<section>
 <div class="bg-gray-100 w-full rounded py-8 px-4" >
   <ul class="flex justify-left items-center my-4">
     <template v-for="(tab, index) in tabs" v-bind:key="index">
@@ -34,6 +35,7 @@
     </div>
     </div>
 </div>
+</section>
 
 </template>
 <script>
@@ -55,8 +57,12 @@ export default {
         title: '',
         description: ''
       },
-      projects: []
+      projects: [],
+      type: ''
     }
+  },
+  mounted () {
+    this.type = localStorage.getItem('create project')
   },
   methods: {
     async createProject () {

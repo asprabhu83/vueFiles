@@ -24,7 +24,7 @@
                   Profile
                 </a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" v-if="permission === 'manage users' || type === 'super_admin'">
                 <div class="relative inline-block text-left">
                   <div>
                     <button type="button" @click="drpdwn = true"  class="drpdwn outline-none border-none inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-transparent text-sm font-medium text-gray-700 " id="menu-button" aria-expanded="true" aria-haspopup="true">
@@ -57,8 +57,14 @@
 export default {
   data () {
     return {
-      drpdwn: false
+      drpdwn: false,
+      permission: '',
+      type: ''
     }
+  },
+  mounted () {
+    this.permission = localStorage.getItem('manage users')
+    this.type = localStorage.getItem('user_role')
   },
   methods: {
     Logout () {
@@ -69,10 +75,7 @@ export default {
         }
       })
         .then(() => {
-          localStorage.removeItem('user_token')
-          localStorage.removeItem('id')
-          localStorage.removeItem('name')
-          localStorage.removeItem('user_role')
+          localStorage.clear()
           this.$router.push('/login')
         })
         .catch((error) => {

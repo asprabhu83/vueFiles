@@ -1,5 +1,6 @@
 <template>
-<div>
+<section>
+<div v-if="permission === 'manage users' || type === 'super_admin'">
    <div class="dialog_box fixed inset-0 h-screen w-full flex justify-center items-center" v-if="addUserDialog === true">
       <div class="dialog_content bg-white rounded-md shadow-md">
          <div class="my-2   flex items-center justify-between py-3 px-6"><span class="font-bold text-lg" >Add User</span><font-awesome-icon icon="times"  size="1x" class="text-red-600 cursor-pointer" @click="addUserDialog = false" /></div>
@@ -379,6 +380,10 @@
     </div>
   </div>
 </div>
+<div class="my-60" v-else>
+  <h1 class="text-center text-2xl font-bold">You do not have authorization to this page, please contact admin</h1>
+</div>
+</section>
 </template>
 
 <script>
@@ -402,12 +407,16 @@ export default {
       userRoleNames: [],
       success: false,
       empty_valid: false,
-      email_valid: false
+      email_valid: false,
+      permission: '',
+      type: ''
     }
   },
   mounted () {
     this.GetUser()
     this.GetUserRoleName()
+    this.permission = localStorage.getItem('manage users')
+    this.type = localStorage.getItem('user_role')
   },
   computed: {
     resultQuery () {

@@ -143,6 +143,13 @@ export default {
           const id = response.data.user.id
           const name = response.data.user.name
           const userRole = response.data.user.user_role
+          if (userRole !== 'super_admin') {
+            var permission = response.data.permission_id[0].permission_id
+            var perm = JSON.parse(permission)
+            for (var i = 0; i < 2; i++) {
+              localStorage.setItem(perm[i], perm[i])
+            }
+          }
           localStorage.setItem('user_token', token)
           localStorage.setItem('id', id)
           localStorage.setItem('name', name)
