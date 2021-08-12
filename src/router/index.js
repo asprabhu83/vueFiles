@@ -8,6 +8,7 @@ import Dashboard from '../views/Dashboard.vue'
 import Login from '../views/Login.vue'
 import UsersList from '../views/UserList.vue'
 import UserRoleList from '../views/UserRoleList.vue'
+import Profile from '../views/Profile.vue'
 
 const routes = [
   {
@@ -21,9 +22,14 @@ const routes = [
     component: Dashboard,
     children: [
       {
-        path: '/',
+        path: '/project',
         name: 'Project',
         component: Project
+      },
+      {
+        path: '/',
+        name: 'Profile',
+        component: Profile
       },
       {
         path: '/user-list',

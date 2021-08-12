@@ -1,6 +1,6 @@
 <template>
 <section>
-<div class="bg-gray-100 w-full rounded py-8 px-4" >
+<div class="bg-gray-100 w-full rounded py-8 px-4" v-if="projectPermission === 'create project' || type === 'super_admin'">
   <ul class="flex justify-left items-center my-4">
     <template v-for="(tab, index) in tabs" v-bind:key="index">
       <li class="cursor-pointer py-2 px-4 text-gray-500 border-b-8" :class="activeTab===index ? 'text-gray-700 border-gray-700' : ''" @click="activeTab = index" v-text="tab"></li>
@@ -35,6 +35,9 @@
     </div>
     </div>
 </div>
+<div class="my-60" v-else>
+  <h1 class="text-center text-2xl font-bold">You do not have authorization to this page, please contact admin</h1>
+</div>
 </section>
 
 </template>
@@ -58,11 +61,13 @@ export default {
         description: ''
       },
       projects: [],
-      type: ''
+      type: '',
+      projectPermission: ''
     }
   },
   mounted () {
-    this.type = localStorage.getItem('create project')
+    this.type = localStorage.getItem('user_role')
+    this.projectPermission = localStorage.getItem('create project')
   },
   methods: {
     async createProject () {

@@ -16,13 +16,11 @@
           </div>
           <div class="lg:flex lg:flex-grow items-center">
             <ul class="flex flex-col lg:flex-row list-none">
-              <li class="nav-item">
-                <router-link  class="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"  to="/" >Projects</router-link>
+              <li class="nav-item" v-if="projectPermission === 'create project' || type === 'super_admin'">
+                <router-link  class="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"  to="/project" >Projects</router-link>
               </li>
               <li class="nav-item">
-                <a class="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75" href="#pablo">
-                  Profile
-                </a>
+                <router-link  class="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"  to="/" >Profile</router-link>
               </li>
               <li class="nav-item" v-if="permission === 'manage users' || type === 'super_admin'">
                 <div class="relative inline-block text-left">
@@ -59,12 +57,14 @@ export default {
     return {
       drpdwn: false,
       permission: '',
-      type: ''
+      type: '',
+      projectPermission: ''
     }
   },
   mounted () {
     this.permission = localStorage.getItem('manage users')
     this.type = localStorage.getItem('user_role')
+    this.projectPermission = localStorage.getItem('create project')
   },
   methods: {
     Logout () {

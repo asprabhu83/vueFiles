@@ -143,10 +143,11 @@ export default {
           const id = response.data.user.id
           const name = response.data.user.name
           const userRole = response.data.user.user_role
+          const email = response.data.user.email
           if (userRole !== 'super_admin') {
             var permission = response.data.permission_id[0].permission_id
             var perm = JSON.parse(permission)
-            for (var i = 0; i < 2; i++) {
+            for (var i = 0; i < perm.length; i++) {
               localStorage.setItem(perm[i], perm[i])
             }
           }
@@ -154,6 +155,7 @@ export default {
           localStorage.setItem('id', id)
           localStorage.setItem('name', name)
           localStorage.setItem('user_role', userRole)
+          localStorage.setItem('email', email)
           if (token !== '') {
             this.$router.push('/')
           }
